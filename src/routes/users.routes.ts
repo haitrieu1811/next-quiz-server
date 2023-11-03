@@ -1,11 +1,11 @@
-import { Router } from 'express'
+import { Router } from 'express';
 
-const usersRouter = Router()
+import { registerController } from '~/controllers/users.controllers';
+import { registerValidator } from '~/middlewares/users.middlewares';
+import { wrapRequestHandler } from '~/utils/handler';
 
-usersRouter.get('/register', (req, res, next) => {
-  res.status(200).json({
-    message: 'Hello, my name is Trieu'
-  })
-})
+const usersRouter = Router();
 
-export default usersRouter
+usersRouter.post('/register', registerValidator, wrapRequestHandler(registerController));
+
+export default usersRouter;

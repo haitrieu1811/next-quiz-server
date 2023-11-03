@@ -9,6 +9,6 @@ const HTTP_STATUS = {
   UNPROCESSABLE_ENTITY: 422,
   INTERNAL_SERVER_ERROR: 500,
   SERVICE_UNAVAILABLE: 503
-} as const
+} as const;
 
-export default HTTP_STATUS
+export default HTTP_STATUS;

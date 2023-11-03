@@ -1,26 +1,21 @@
-enum UserRole {
+export enum UserRole {
   Admin,
   Manager,
   User
 }
 
-enum UserGender {
+export enum UserGender {
   Male,
   Female,
   Other
 }
 
-enum UserVerifyStatus {
-  Unverified,
-  Verified
-}
-
-enum UserStatus {
+export enum UserStatus {
   Unactive,
   Active
 }
 
-enum TokenType {
+export enum TokenType {
   AccessToken,
   RefreshToken,
   EmailVerifyToken,

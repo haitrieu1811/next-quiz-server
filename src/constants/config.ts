@@ -1,8 +1,9 @@
-import { config } from 'dotenv'
-config()
+import { config } from 'dotenv';
+config();
 
 export const ENV_CONFIG = {
   PORT: process.env.PORT as string,
+  PASSWORD_SECRET: process.env.PASSWORD_SECRET as string,
   DB_USERNAME: process.env.DB_USERNAME as string,
   DB_PASSWORD: process.env.DB_PASSWORD as string,
   DB_NAME: process.env.DB_NAME as string,
@@ -16,4 +17,4 @@ export const ENV_CONFIG = {
   REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN as string,
   EMAIL_VERIFY_TOKEN_EXPIRES_IN: process.env.EMAIL_VERIFY_TOKEN_EXPIRES_IN as string,
   FORGOT_PASSWORD_TOKEN_EXPIRES_IN: process.env.FORGOT_PASSWORD_TOKEN_EXPIRES_IN as string
-} as const
+} as const;
