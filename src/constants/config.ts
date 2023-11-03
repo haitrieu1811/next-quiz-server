@@ -2,5 +2,9 @@ import { config } from 'dotenv'
 config()
 
 export const ENV_CONFIG = {
-  HOST: process.env.PORT as string
+  PORT: process.env.PORT as string,
+  DB_USERNAME: process.env.DB_USERNAME as string,
+  DB_PASSWORD: process.env.DB_PASSWORD as string,
+  DB_NAME: process.env.DB_NAME as string,
+  DB_USERS_COLLECTION: process.env.DB_USERS_COLLECTION as string
 } as const
