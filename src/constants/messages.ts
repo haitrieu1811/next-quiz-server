@@ -49,4 +49,11 @@ export const IMAGES_MESSAGES = {
   FILE_TYPE_INVALID: 'Loại file không hợp lệ',
   IMAGE_FIELD_IS_REQUIRED: 'Trường ảnh là bắt buộc',
   UPLOAD_IMAGE_SUCCESSFULLY: 'Tải ảnh lên thành công'
-};
+} as const;
+
+export const TOPICS_MESSAGES = {
+  CREATE_TOPIC_SUCCESSFULLY: 'Tạo chủ đề thành công',
+  TOPIC_NAME_IS_REQUIRED: 'Tên chủ đề là bắt buộc',
+  TOPIC_NAME_MUST_BE_A_STRING: 'Tên chủ đề phải là một chuỗi',
+  TOPIC_NAME_ALREADY_EXISTS: 'Tên chủ đề đã tồn tại'
+} as const;
