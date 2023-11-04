@@ -44,3 +44,9 @@ export const USERS_MESSAGES = {
   CHANGE_PASSWORD_SUCCESSFULLY: 'Đổi mật khẩu thành công',
   OLD_PASSWORD_IS_INCORRECT: 'Mật khẩu cũ không chính xác'
 } as const;
+
+export const IMAGES_MESSAGES = {
+  FILE_TYPE_INVALID: 'Loại file không hợp lệ',
+  IMAGE_FIELD_IS_REQUIRED: 'Trường ảnh là bắt buộc',
+  UPLOAD_IMAGE_SUCCESSFULLY: 'Tải ảnh lên thành công'
+};
