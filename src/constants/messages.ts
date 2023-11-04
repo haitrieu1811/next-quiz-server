@@ -1,5 +1,13 @@
-export const USERS_MESSAGES = {
+export const COMMON_MESSAGES = {
   VALIDATION_ERROR: 'Lỗi xác thực',
+  PAGE_MUST_BE_A_NUMBER: 'Trang phải là một số',
+  PAGE_MUST_BE_A_POSITIVE_NUMBER: 'Trang phải là một số dương',
+  LIMIT_MUST_BE_A_NUMBER: 'Giới hạn kết quả trả về phải là một số',
+  LIMIT_MUST_BE_A_POSITIVE_NUMBER: 'Giới hạn kết quả trả về phải là một số dương',
+  LIMIT_MUST_BE_LESS_THAN_100: 'Giới hạn kết quả trả về phải nhỏ hơn 100'
+} as const;
+
+export const USERS_MESSAGES = {
   ACCESS_TOKEN_IS_REQUIRED: 'Access token là bắt buộc',
   REFRESH_TOKEN_IS_REQUIRED: 'Refresh token là bắt buộc',
   USED_REFRESH_TOKEN_OR_NOT_EXIST: 'Refresh token đã được sử dụng hoặc không tồn tại',
@@ -19,5 +27,6 @@ export const USERS_MESSAGES = {
   EMAIL_OR_PASSWORD_IS_INCORRECT: 'Email hoặc mật khẩu không chính xác',
   LOGIN_SUCCESSFULLY: 'Đăng nhập thành công',
   LOGOUT_SUCCESSFULLY: 'Đăng xuất thành công',
-  REFRESH_TOKEN_SUCCESSFULLY: 'Refresh token thành công'
+  REFRESH_TOKEN_SUCCESSFULLY: 'Refresh token thành công',
+  GET_ME_SUCCESSFULLY: 'Lấy thông tin tài khoản thành công'
 } as const;

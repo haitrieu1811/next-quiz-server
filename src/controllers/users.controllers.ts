@@ -64,3 +64,15 @@ export const refreshTokenController = async (req: Request<ParamsDictionary, any,
     }
   });
 };
+
+// Lấy thông tin người dùng hiện tại (chỉ khi đã đăng nhập)
+export const getMeController = async (req: Request, res: Response) => {
+  const { user_id } = req.decoded_authorization as TokenPayload;
+  const user = await usersService.getMe(user_id);
+  return res.json({
+    message: USERS_MESSAGES.GET_ME_SUCCESSFULLY,
+    data: {
+      user
+    }
+  });
+};

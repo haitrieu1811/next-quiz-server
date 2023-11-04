@@ -1,12 +1,18 @@
 import { Router } from 'express';
 
 import {
+  getMeController,
   loginController,
   logoutController,
   refreshTokenController,
   registerController
 } from '~/controllers/users.controllers';
-import { loginValidator, refreshTokenValidator, registerValidator } from '~/middlewares/users.middlewares';
+import {
+  accessTokenValidator,
+  loginValidator,
+  refreshTokenValidator,
+  registerValidator
+} from '~/middlewares/users.middlewares';
 import { wrapRequestHandler } from '~/utils/handler';
 
 const usersRouter = Router();
@@ -22,5 +28,8 @@ usersRouter.post('/logout', refreshTokenValidator, wrapRequestHandler(logoutCont
 
 // Refresh token
 usersRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(refreshTokenController));
+
+// Lấy thông tin người dùng hiện tại (chỉ khi đã đăng nhập)
+usersRouter.get('/me', accessTokenValidator, wrapRequestHandler(getMeController));
 
 export default usersRouter;
