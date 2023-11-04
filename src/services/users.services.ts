@@ -148,6 +148,42 @@ class UsersService {
     });
     return;
   }
+
+  // Refresh token
+  async refreshToken({
+    user_id,
+    role,
+    refresh_exp,
+    refresh_token
+  }: {
+    user_id: string;
+    role: UserRole;
+    refresh_exp?: number;
+    refresh_token: string;
+  }) {
+    const [new_access_token, new_refresh_token] = await this.signAccessAndRefreshToken({
+      user_id,
+      role,
+      refresh_exp
+    });
+    const { iat, exp } = await this.decodeRefreshToken(refresh_token);
+    await Promise.all([
+      databaseService.refresh_tokens.deleteOne({
+        token: refresh_token
+      }),
+      databaseService.refresh_tokens.insertOne(
+        new RefreshToken({
+          token: new_refresh_token,
+          iat,
+          exp
+        })
+      )
+    ]);
+    return {
+      new_access_token,
+      new_refresh_token
+    };
+  }
 }
 
 const usersService = new UsersService();

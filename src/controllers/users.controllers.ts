@@ -3,7 +3,7 @@ import { ParamsDictionary } from 'express-serve-static-core';
 import { ObjectId } from 'mongodb';
 
 import { USERS_MESSAGES } from '~/constants/messages';
-import { LoginReqBody, RegisterReqBody } from '~/models/requests/User.requests';
+import { LoginReqBody, LogoutReqBody, RegisterReqBody, TokenPayload } from '~/models/requests/User.requests';
 import User from '~/models/schemas/User.schema';
 import usersService from '~/services/users.services';
 
@@ -43,5 +43,24 @@ export const logoutController = async (req: Request, res: Response) => {
   await usersService.logout(refresh_token);
   return res.json({
     message: USERS_MESSAGES.LOGOUT_SUCCESSFULLY
+  });
+};
+
+// Refresh token
+export const refreshTokenController = async (req: Request<ParamsDictionary, any, LogoutReqBody>, res: Response) => {
+  const { user_id, role, exp } = req.decoded_refresh_token as TokenPayload;
+  const { refresh_token } = req.body;
+  const { new_access_token, new_refresh_token } = await usersService.refreshToken({
+    user_id,
+    role,
+    refresh_exp: exp,
+    refresh_token
+  });
+  return res.json({
+    message: USERS_MESSAGES.REFRESH_TOKEN_SUCCESSFULLY,
+    data: {
+      access_token: new_access_token,
+      refresh_token: new_refresh_token
+    }
   });
 };

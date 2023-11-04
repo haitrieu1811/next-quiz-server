@@ -18,5 +18,6 @@ export const USERS_MESSAGES = {
   EMAIL_NOT_EXIST: 'Email không tồn tại trong hệ thống',
   EMAIL_OR_PASSWORD_IS_INCORRECT: 'Email hoặc mật khẩu không chính xác',
   LOGIN_SUCCESSFULLY: 'Đăng nhập thành công',
-  LOGOUT_SUCCESSFULLY: 'Đăng xuất thành công'
+  LOGOUT_SUCCESSFULLY: 'Đăng xuất thành công',
+  REFRESH_TOKEN_SUCCESSFULLY: 'Refresh token thành công'
 } as const;
