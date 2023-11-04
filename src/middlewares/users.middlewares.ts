@@ -4,13 +4,18 @@ import { JsonWebTokenError } from 'jsonwebtoken';
 import capitalize from 'lodash/capitalize';
 
 import { ENV_CONFIG } from '~/constants/config';
+import { UserGender } from '~/constants/enum';
 import HTTP_STATUS from '~/constants/httpStatus';
 import { USERS_MESSAGES } from '~/constants/messages';
 import { ErrorWithStatus } from '~/models/Errors';
+import { TokenPayload } from '~/models/requests/User.requests';
 import databaseService from '~/services/database.services';
+import { numberEnumToArray } from '~/utils/common';
 import { hashPassword } from '~/utils/crypto';
 import { verifyToken } from '~/utils/jwt';
 import { validate } from '~/utils/validation';
+
+const userGenders = numberEnumToArray(UserGender);
 
 const emailSchema: ParamSchema = {
   notEmpty: {
@@ -209,6 +214,90 @@ export const loginValidator = validate(
             (req as Request).user = user;
             return true;
           }
+        }
+      }
+    },
+    ['body']
+  )
+);
+
+// Kiểm tra dữ liệu cập nhật thông tin người dùng
+export const updateMeValidator = validate(
+  checkSchema(
+    {
+      fullname: {
+        optional: true,
+        trim: true,
+        isString: {
+          errorMessage: USERS_MESSAGES.FULLNAME_MUST_BE_A_STRING
+        },
+        isLength: {
+          errorMessage: USERS_MESSAGES.FULLNAME_LENGTH_IS_INVALID,
+          options: {
+            min: 2,
+            max: 32
+          }
+        }
+      },
+      avatar: {
+        optional: true,
+        trim: true,
+        isMongoId: {
+          errorMessage: USERS_MESSAGES.AVATAR_IS_INVALID
+        }
+      },
+      cover: {
+        optional: true,
+        trim: true,
+        isMongoId: {
+          errorMessage: USERS_MESSAGES.COVER_IS_INVALID
+        }
+      },
+      bio: {
+        optional: true,
+        trim: true,
+        isString: {
+          errorMessage: USERS_MESSAGES.BIO_MUST_BE_A_STRING
+        },
+        isLength: {
+          options: {
+            min: 6,
+            max: 255
+          },
+          errorMessage: USERS_MESSAGES.BIO_LENGTH_IS_INVALID
+        }
+      },
+      gender: {
+        optional: true,
+        isIn: {
+          options: [userGenders],
+          errorMessage: USERS_MESSAGES.GENDER_IS_INVALID
+        }
+      },
+      phone_number: {
+        optional: true,
+        trim: true,
+        isString: {
+          errorMessage: USERS_MESSAGES.PHONE_NUMBER_MUST_BE_A_STRING
+        },
+        isMobilePhone: {
+          errorMessage: USERS_MESSAGES.PHONE_NUMBER_IS_INVALID
+        },
+        custom: {
+          options: async (value: string, { req }) => {
+            const { user_id } = (req as Request).decoded_authorization as TokenPayload;
+            const user = await databaseService.users.findOne({ phone_number: value });
+            if (user && user._id.toString() !== user_id) {
+              throw new Error(USERS_MESSAGES.PHONE_NUMBER_ALREADY_EXISTS);
+            }
+            return true;
+          }
+        }
+      },
+      date_of_birth: {
+        optional: true,
+        isDate: {
+          errorMessage: USERS_MESSAGES.DATE_OF_BIRTH_IS_INVALID
         }
       }
     },

@@ -28,5 +28,17 @@ export const USERS_MESSAGES = {
   LOGIN_SUCCESSFULLY: 'Đăng nhập thành công',
   LOGOUT_SUCCESSFULLY: 'Đăng xuất thành công',
   REFRESH_TOKEN_SUCCESSFULLY: 'Refresh token thành công',
-  GET_ME_SUCCESSFULLY: 'Lấy thông tin tài khoản thành công'
+  GET_ME_SUCCESSFULLY: 'Lấy thông tin tài khoản thành công',
+  UPDATE_ME_SUCCESSFULLY: 'Cập nhật thông tin tài khoản thành công',
+  FULLNAME_MUST_BE_A_STRING: 'Họ và tên phải là một chuỗi',
+  FULLNAME_LENGTH_IS_INVALID: 'Họ và tên phải có độ dài từ 2 đến 32 ký tự',
+  AVATAR_IS_INVALID: 'Ảnh đại diện không hợp lệ',
+  COVER_IS_INVALID: 'Ảnh bìa không hợp lệ',
+  BIO_MUST_BE_A_STRING: 'Tiểu sử phải là một chuỗi',
+  BIO_LENGTH_IS_INVALID: 'Tiểu sử phải có độ dài từ 2 đến 255 ký tự',
+  GENDER_IS_INVALID: 'Giới tính không hợp lệ',
+  PHONE_NUMBER_MUST_BE_A_STRING: 'Số điện thoại phải là một chuỗi',
+  PHONE_NUMBER_IS_INVALID: 'Số điện thoại không hợp lệ',
+  DATE_OF_BIRTH_IS_INVALID: 'Ngày sinh không hợp lệ',
+  PHONE_NUMBER_ALREADY_EXISTS: 'Số điện thoại đã tồn tại'
 } as const;

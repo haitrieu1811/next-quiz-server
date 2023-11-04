@@ -7,15 +7,6 @@ import { COMMON_MESSAGES } from '~/constants/messages';
 import { ErrorWithStatus } from '~/models/Errors';
 import { validate } from '~/utils/validation';
 
-type FilterKeys<T> = Array<keyof T>;
-
-export const filterReqBodyMiddleware =
-  <T>(filterKeys: FilterKeys<T>) =>
-  (req: Request, res: Response, next: NextFunction) => {
-    req.body = pick(req.body, filterKeys);
-    next();
-  };
-
 export const paginationValidator = validate(
   checkSchema(
     {

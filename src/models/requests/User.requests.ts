@@ -1,5 +1,7 @@
 import { JwtPayload } from 'jsonwebtoken';
-import { TokenType, UserRole } from '~/constants/enum';
+import { ObjectId } from 'mongodb';
+
+import { TokenType, UserGender, UserRole } from '~/constants/enum';
 
 export interface TokenPayload extends JwtPayload {
   user_id: string;
@@ -25,4 +27,18 @@ export interface LoginReqBody {
 // Body: Đăng xuất
 export interface LogoutReqBody {
   refresh_token: string;
+}
+
+// Body: Refresh token
+export type RefreshTokenReqBody = LogoutReqBody;
+
+// Body: Cập nhật thông tin người dùng
+export interface UpdateMeReqBody {
+  fullname?: string;
+  avatar?: ObjectId | null;
+  cover?: ObjectId | null;
+  bio?: string;
+  gender?: UserGender;
+  phone_number?: string;
+  date_of_birth?: Date;
 }

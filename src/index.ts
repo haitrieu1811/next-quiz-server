@@ -7,6 +7,7 @@ import databaseService from './services/database.services';
 
 databaseService.connect().then(() => {
   databaseService.indexUsers();
+  databaseService.indexRefreshTokens();
 });
 
 const app = express();

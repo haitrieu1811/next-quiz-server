@@ -26,11 +26,21 @@ class DatabaseService {
   }
 
   async indexUsers() {
-    const isExisted = await this.users.indexExists(['email_1', 'exp_1']);
+    const isExisted = await this.users.indexExists(['email_1', 'phone_number_1']);
     if (!isExisted) {
       await Promise.all([
         this.users.createIndex({ email: 1 }, { unique: true }),
-        this.users.createIndex({ exp: 1 }, { expireAfterSeconds: 0 })
+        this.users.createIndex({ phone_number: 1 })
+      ]);
+    }
+  }
+
+  async indexRefreshTokens() {
+    const isExisted = await this.refresh_tokens.indexExists(['token_1', 'exp_1']);
+    if (!isExisted) {
+      await Promise.all([
+        this.refresh_tokens.createIndex({ token: 1 }, { unique: true }),
+        this.refresh_tokens.createIndex({ exp: 1 }, { expireAfterSeconds: 0 })
       ]);
     }
   }

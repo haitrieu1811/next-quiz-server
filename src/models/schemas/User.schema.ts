@@ -6,6 +6,9 @@ interface UserConstructor {
   email: string;
   password: string;
   fullname?: string;
+  avatar?: ObjectId | null;
+  cover?: ObjectId | null;
+  bio?: string;
   gender?: UserGender;
   date_of_birth?: Date;
   phone_number?: string;
@@ -21,6 +24,9 @@ export default class User {
   email: string;
   password: string;
   fullname: string;
+  avatar: ObjectId | null;
+  cover: ObjectId | null;
+  bio: string;
   gender: UserGender;
   date_of_birth: Date;
   phone_number: string;
@@ -35,6 +41,9 @@ export default class User {
     email,
     password,
     fullname,
+    avatar,
+    cover,
+    bio,
     gender,
     date_of_birth,
     phone_number,
@@ -49,6 +58,9 @@ export default class User {
     this.email = email;
     this.password = password;
     this.fullname = fullname || '';
+    this.avatar = avatar || null;
+    this.cover = cover || null;
+    this.bio = bio || '';
     this.gender = gender || UserGender.Other;
     this.date_of_birth = date_of_birth || date;
     this.phone_number = phone_number || '';

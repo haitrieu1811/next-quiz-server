@@ -1,8 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import pick from 'lodash/pick';
 
-type FilterKeys<T> = Array<keyof T>;
-
 export const wrapRequestHandler = <P>(func: RequestHandler<P>) => {
   return async (req: Request<P>, res: Response, next: NextFunction) => {
     try {
@@ -12,6 +10,8 @@ export const wrapRequestHandler = <P>(func: RequestHandler<P>) => {
     }
   };
 };
+
+type FilterKeys<T> = Array<keyof T>;
 
 export const filterReqBodyMiddleware =
   <T>(filterKeys: FilterKeys<T>) =>

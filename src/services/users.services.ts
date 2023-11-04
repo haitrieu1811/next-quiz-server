@@ -1,8 +1,8 @@
-import { ObjectId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
 
 import { ENV_CONFIG } from '~/constants/config';
 import { TokenType, UserRole } from '~/constants/enum';
-import { RegisterReqBody } from '~/models/requests/User.requests';
+import { RegisterReqBody, UpdateMeReqBody } from '~/models/requests/User.requests';
 import RefreshToken from '~/models/schemas/RefreshToken.schema';
 import User from '~/models/schemas/User.schema';
 import { hashPassword } from '~/utils/crypto';
@@ -198,6 +198,31 @@ class UsersService {
           status: 0,
           forgot_password_token: 0
         }
+      }
+    );
+    return user;
+  }
+
+  // Cập nhật thông tin người dùng hiện tại
+  async updateMe({ body, user_id }: { body: UpdateMeReqBody; user_id: string }) {
+    const user = await databaseService.users.findOneAndUpdate(
+      {
+        _id: new ObjectId(user_id)
+      },
+      {
+        $set: body,
+        $currentDate: {
+          updated_at: true
+        }
+      },
+      {
+        projection: {
+          password: 0,
+          role: 0,
+          status: 0,
+          forgot_password_token: 0
+        },
+        returnDocument: 'after'
       }
     );
     return user;

@@ -5,15 +5,18 @@ import {
   loginController,
   logoutController,
   refreshTokenController,
-  registerController
+  registerController,
+  updateMeController
 } from '~/controllers/users.controllers';
 import {
   accessTokenValidator,
   loginValidator,
   refreshTokenValidator,
-  registerValidator
+  registerValidator,
+  updateMeValidator
 } from '~/middlewares/users.middlewares';
-import { wrapRequestHandler } from '~/utils/handler';
+import { UpdateMeReqBody } from '~/models/requests/User.requests';
+import { filterReqBodyMiddleware, wrapRequestHandler } from '~/utils/handler';
 
 const usersRouter = Router();
 
@@ -31,5 +34,22 @@ usersRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(ref
 
 // Lấy thông tin người dùng hiện tại (chỉ khi đã đăng nhập)
 usersRouter.get('/me', accessTokenValidator, wrapRequestHandler(getMeController));
+
+// Cập nhật thông tin người dùng hiện tại
+usersRouter.patch(
+  '/me',
+  accessTokenValidator,
+  updateMeValidator,
+  filterReqBodyMiddleware<UpdateMeReqBody>([
+    'avatar',
+    'bio',
+    'cover',
+    'date_of_birth',
+    'fullname',
+    'gender',
+    'phone_number'
+  ]),
+  wrapRequestHandler(updateMeController)
+);
 
 export default usersRouter;

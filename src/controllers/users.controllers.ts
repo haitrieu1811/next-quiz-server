@@ -3,7 +3,13 @@ import { ParamsDictionary } from 'express-serve-static-core';
 import { ObjectId } from 'mongodb';
 
 import { USERS_MESSAGES } from '~/constants/messages';
-import { LoginReqBody, LogoutReqBody, RegisterReqBody, TokenPayload } from '~/models/requests/User.requests';
+import {
+  LoginReqBody,
+  RefreshTokenReqBody,
+  RegisterReqBody,
+  TokenPayload,
+  UpdateMeReqBody
+} from '~/models/requests/User.requests';
 import User from '~/models/schemas/User.schema';
 import usersService from '~/services/users.services';
 
@@ -47,7 +53,10 @@ export const logoutController = async (req: Request, res: Response) => {
 };
 
 // Refresh token
-export const refreshTokenController = async (req: Request<ParamsDictionary, any, LogoutReqBody>, res: Response) => {
+export const refreshTokenController = async (
+  req: Request<ParamsDictionary, any, RefreshTokenReqBody>,
+  res: Response
+) => {
   const { user_id, role, exp } = req.decoded_refresh_token as TokenPayload;
   const { refresh_token } = req.body;
   const { new_access_token, new_refresh_token } = await usersService.refreshToken({
@@ -71,6 +80,18 @@ export const getMeController = async (req: Request, res: Response) => {
   const user = await usersService.getMe(user_id);
   return res.json({
     message: USERS_MESSAGES.GET_ME_SUCCESSFULLY,
+    data: {
+      user
+    }
+  });
+};
+
+// Cập nhật thông tin người dùng hiện tại
+export const updateMeController = async (req: Request<ParamsDictionary, any, UpdateMeReqBody>, res: Response) => {
+  const { user_id } = req.decoded_authorization as TokenPayload;
+  const user = await usersService.updateMe({ body: req.body, user_id });
+  return res.json({
+    message: USERS_MESSAGES.UPDATE_ME_SUCCESSFULLY,
     data: {
       user
     }
