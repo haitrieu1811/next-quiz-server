@@ -14,5 +14,9 @@ export const USERS_MESSAGES = {
   CONFIRM_PASSWORD_IS_REQUIRED: 'Xác nhận mật khẩu là bắt buộc',
   CONFIRM_PASSWORD_MUST_BE_A_STRING: 'Xác nhận mật khẩu phải là một chuỗi',
   CONFIRM_PASSWORD_NOT_MATCH: 'Xác nhận mật khẩu không khớp với mật khẩu',
-  REGISTER_SUCCESSFULLY: 'Đăng ký thành công'
+  REGISTER_SUCCESSFULLY: 'Đăng ký thành công',
+  EMAIL_NOT_EXIST: 'Email không tồn tại trong hệ thống',
+  EMAIL_OR_PASSWORD_IS_INCORRECT: 'Email hoặc mật khẩu không chính xác',
+  LOGIN_SUCCESSFULLY: 'Đăng nhập thành công',
+  LOGOUT_SUCCESSFULLY: 'Đăng xuất thành công'
 } as const;

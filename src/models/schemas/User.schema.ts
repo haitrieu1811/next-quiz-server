@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { UserGender, UserStatus } from '~/constants/enum';
+import { UserGender, UserRole, UserStatus } from '~/constants/enum';
 
 interface UserConstructor {
   _id?: ObjectId;
@@ -10,6 +10,7 @@ interface UserConstructor {
   date_of_birth?: Date;
   phone_number?: string;
   status?: UserStatus;
+  role?: UserRole;
   forgot_password_token?: string;
   created_at?: Date;
   updated_at?: Date;
@@ -24,6 +25,7 @@ export default class User {
   date_of_birth: Date;
   phone_number: string;
   status: UserStatus;
+  role: UserRole;
   forgot_password_token: string;
   created_at: Date;
   updated_at: Date;
@@ -37,6 +39,7 @@ export default class User {
     date_of_birth,
     phone_number,
     status,
+    role,
     forgot_password_token,
     created_at,
     updated_at
@@ -50,6 +53,7 @@ export default class User {
     this.date_of_birth = date_of_birth || date;
     this.phone_number = phone_number || '';
     this.status = status || UserStatus.Active;
+    this.role = role || UserRole.User;
     this.forgot_password_token = forgot_password_token || '';
     this.created_at = created_at || date;
     this.updated_at = updated_at || date;

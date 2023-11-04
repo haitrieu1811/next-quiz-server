@@ -15,3 +15,14 @@ export interface RegisterReqBody {
   password: string;
   confirm_password: string;
 }
+
+// Body: Đăng nhập
+export interface LoginReqBody {
+  email: string;
+  password: string;
+}
+
+// Body: Đăng xuất
+export interface LogoutReqBody {
+  refresh_token: string;
+}

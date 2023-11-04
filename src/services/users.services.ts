@@ -120,6 +120,34 @@ class UsersService {
       refresh_token
     };
   }
+
+  // Đăng nhập
+  async login({ user_id, role }: { user_id: string; role: UserRole }) {
+    const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
+      user_id,
+      role
+    });
+    const { iat, exp } = await this.decodeRefreshToken(refresh_token);
+    await databaseService.refresh_tokens.insertOne(
+      new RefreshToken({
+        token: refresh_token,
+        iat,
+        exp
+      })
+    );
+    return {
+      access_token,
+      refresh_token
+    };
+  }
+
+  // Đăng xuất
+  async logout(refresh_token: string) {
+    await databaseService.refresh_tokens.deleteOne({
+      token: refresh_token
+    });
+    return;
+  }
 }
 
 const usersService = new UsersService();
