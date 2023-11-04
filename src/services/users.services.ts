@@ -1,4 +1,4 @@
-import { ObjectId, WithId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 
 import { ENV_CONFIG } from '~/constants/config';
 import { TokenType, UserRole } from '~/constants/enum';
@@ -226,6 +226,24 @@ class UsersService {
       }
     );
     return user;
+  }
+
+  // Đổi mật khẩu
+  async changePassword({ new_password, user_id }: { new_password: string; user_id: string }) {
+    await databaseService.users.updateOne(
+      {
+        _id: new ObjectId(user_id)
+      },
+      {
+        $set: {
+          password: hashPassword(new_password)
+        },
+        $currentDate: {
+          updated_at: true
+        }
+      }
+    );
+    return;
   }
 }
 

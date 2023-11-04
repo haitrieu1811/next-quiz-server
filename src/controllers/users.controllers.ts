@@ -4,6 +4,7 @@ import { ObjectId } from 'mongodb';
 
 import { USERS_MESSAGES } from '~/constants/messages';
 import {
+  ChangePasswordReqBody,
   LoginReqBody,
   RefreshTokenReqBody,
   RegisterReqBody,
@@ -95,5 +96,18 @@ export const updateMeController = async (req: Request<ParamsDictionary, any, Upd
     data: {
       user
     }
+  });
+};
+
+// Đổi mật khẩu
+export const changePasswordController = async (
+  req: Request<ParamsDictionary, any, ChangePasswordReqBody>,
+  res: Response
+) => {
+  const { user_id } = req.decoded_authorization as TokenPayload;
+  const { password: new_password } = req.body;
+  await usersService.changePassword({ new_password, user_id });
+  return res.json({
+    message: USERS_MESSAGES.CHANGE_PASSWORD_SUCCESSFULLY
   });
 };

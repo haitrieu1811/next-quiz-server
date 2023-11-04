@@ -40,5 +40,7 @@ export const USERS_MESSAGES = {
   PHONE_NUMBER_MUST_BE_A_STRING: 'Số điện thoại phải là một chuỗi',
   PHONE_NUMBER_IS_INVALID: 'Số điện thoại không hợp lệ',
   DATE_OF_BIRTH_IS_INVALID: 'Ngày sinh không hợp lệ',
-  PHONE_NUMBER_ALREADY_EXISTS: 'Số điện thoại đã tồn tại'
+  PHONE_NUMBER_ALREADY_EXISTS: 'Số điện thoại đã tồn tại',
+  CHANGE_PASSWORD_SUCCESSFULLY: 'Đổi mật khẩu thành công',
+  OLD_PASSWORD_IS_INCORRECT: 'Mật khẩu cũ không chính xác'
 } as const;

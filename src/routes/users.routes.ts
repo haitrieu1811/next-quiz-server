@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import {
+  changePasswordController,
   getMeController,
   loginController,
   logoutController,
@@ -10,6 +11,7 @@ import {
 } from '~/controllers/users.controllers';
 import {
   accessTokenValidator,
+  changePasswordValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator,
@@ -50,6 +52,14 @@ usersRouter.patch(
     'phone_number'
   ]),
   wrapRequestHandler(updateMeController)
+);
+
+// Đổi mật khẩu
+usersRouter.patch(
+  '/change-password',
+  accessTokenValidator,
+  changePasswordValidator,
+  wrapRequestHandler(changePasswordController)
 );
 
 export default usersRouter;

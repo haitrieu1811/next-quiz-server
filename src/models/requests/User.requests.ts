@@ -42,3 +42,10 @@ export interface UpdateMeReqBody {
   phone_number?: string;
   date_of_birth?: Date;
 }
+
+// Body: Đổi mật khẩu
+export interface ChangePasswordReqBody {
+  old_password: string;
+  password: string;
+  confirm_password: string;
+}

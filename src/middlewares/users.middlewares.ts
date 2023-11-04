@@ -2,6 +2,7 @@ import { Request } from 'express';
 import { checkSchema, ParamSchema } from 'express-validator';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import capitalize from 'lodash/capitalize';
+import { ObjectId } from 'mongodb';
 
 import { ENV_CONFIG } from '~/constants/config';
 import { UserGender } from '~/constants/enum';
@@ -51,6 +52,23 @@ const passwordSchema: ParamSchema = {
       minUppercase: 1,
       minNumbers: 1,
       minSymbols: 1
+    }
+  }
+};
+
+const confirmPasswordSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.CONFIRM_PASSWORD_IS_REQUIRED
+  },
+  isString: {
+    errorMessage: USERS_MESSAGES.CONFIRM_PASSWORD_MUST_BE_A_STRING
+  },
+  custom: {
+    options: (value: string, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error(USERS_MESSAGES.CONFIRM_PASSWORD_NOT_MATCH);
+      }
+      return true;
     }
   }
 };
@@ -152,22 +170,7 @@ export const registerValidator = validate(
         }
       },
       password: passwordSchema,
-      confirm_password: {
-        notEmpty: {
-          errorMessage: USERS_MESSAGES.CONFIRM_PASSWORD_IS_REQUIRED
-        },
-        isString: {
-          errorMessage: USERS_MESSAGES.CONFIRM_PASSWORD_MUST_BE_A_STRING
-        },
-        custom: {
-          options: (value: string, { req }) => {
-            if (value !== req.body.password) {
-              throw new Error(USERS_MESSAGES.CONFIRM_PASSWORD_NOT_MATCH);
-            }
-            return true;
-          }
-        }
-      }
+      confirm_password: confirmPasswordSchema
     },
     ['body']
   )
@@ -300,6 +303,32 @@ export const updateMeValidator = validate(
           errorMessage: USERS_MESSAGES.DATE_OF_BIRTH_IS_INVALID
         }
       }
+    },
+    ['body']
+  )
+);
+
+// Kiểm tra dữ liệu đổi mật khẩu
+export const changePasswordValidator = validate(
+  checkSchema(
+    {
+      old_password: {
+        ...passwordSchema,
+        custom: {
+          options: async (value: string, { req }) => {
+            const { user_id } = (req as Request).decoded_authorization as TokenPayload;
+            const user = await databaseService.users.findOne({
+              _id: new ObjectId(user_id)
+            });
+            if (user && user.password !== hashPassword(value)) {
+              throw new Error(USERS_MESSAGES.OLD_PASSWORD_IS_INCORRECT);
+            }
+            return true;
+          }
+        }
+      },
+      password: passwordSchema,
+      confirm_password: confirmPasswordSchema
     },
     ['body']
   )
