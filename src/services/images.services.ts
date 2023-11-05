@@ -4,11 +4,13 @@ import path from 'path';
 import sharp from 'sharp';
 import { UPLOAD_IMAGE_DIR } from '~/constants/dir';
 
+import Image from '~/models/schemas/Image.schema';
 import { getExtensionFromFullname, getNameFromFullname, handleUploadImage } from '~/utils/file';
 import { uploadFileToS3 } from '~/utils/s3';
+import databaseService from './database.services';
 
 class ImagesService {
-  // Upload ảnh (một hoặc nhiều ảnh)
+  // Upload ảnh (một hoặc nhiều ảnh) -> sau khi upload xong, lưu vào database và trả về kết quả
   async uploadImage(req: Request) {
     const images = await handleUploadImage(req);
     const result = await Promise.all(
@@ -18,19 +20,25 @@ class ImagesService {
         const newFullname = `${newName}.jpg`;
         const newPath = path.resolve(UPLOAD_IMAGE_DIR, newFullname);
         if (extention !== 'jpg') await sharp(image.filepath).jpeg().toFile(newPath);
-        await uploadFileToS3({
-          filename: `images/${newFullname}`,
-          filepath: newPath,
-          contentType: 'image/jpeg'
-        });
+        const [, { insertedId }] = await Promise.all([
+          uploadFileToS3({
+            filename: `images/${newFullname}`,
+            filepath: newPath,
+            contentType: 'image/jpeg'
+          }),
+          databaseService.images.insertOne(
+            new Image({
+              name: newFullname
+            })
+          )
+        ]);
+        const newImage = await databaseService.images.findOne({ _id: insertedId });
         try {
           await Promise.all([fsPromise.unlink(image.filepath), fsPromise.unlink(newPath)]);
         } catch (error) {
           console.log(error);
         }
-        return {
-          name: newFullname
-        };
+        return newImage;
       })
     );
     return result;

@@ -1,6 +1,7 @@
 import { Collection, Db, MongoClient } from 'mongodb';
 
 import { ENV_CONFIG } from '~/constants/config';
+import Image from '~/models/schemas/Image.schema';
 import RefreshToken from '~/models/schemas/RefreshToken.schema';
 import Topic from '~/models/schemas/Topic.schema';
 import User from '~/models/schemas/User.schema';
@@ -55,7 +56,11 @@ class DatabaseService {
   }
 
   get topics(): Collection<Topic> {
-    return this.db.collection(ENV_CONFIG.DB_REFRESH_TOPICS_COLLECTION);
+    return this.db.collection(ENV_CONFIG.DB_TOPICS_COLLECTION);
+  }
+
+  get images(): Collection<Image> {
+    return this.db.collection(ENV_CONFIG.DB_IMAGES_COLLECTION);
   }
 }
 
