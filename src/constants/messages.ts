@@ -55,5 +55,13 @@ export const TOPICS_MESSAGES = {
   CREATE_TOPIC_SUCCESSFULLY: 'Tạo chủ đề thành công',
   TOPIC_NAME_IS_REQUIRED: 'Tên chủ đề là bắt buộc',
   TOPIC_NAME_MUST_BE_A_STRING: 'Tên chủ đề phải là một chuỗi',
-  TOPIC_NAME_ALREADY_EXISTS: 'Tên chủ đề đã tồn tại'
+  TOPIC_NAME_ALREADY_EXISTS: 'Tên chủ đề đã tồn tại',
+  GET_TOPICS_SUCCESSFULLY: 'Lấy danh sách chủ đề thành công',
+  UPDATE_TOPIC_SUCCESSFULLY: 'Cập nhật chủ đề thành công',
+  TOPIC_ID_IS_REQUIRED: 'Topic id là bắt buộc',
+  TOPIC_ID_IS_INVALID: 'Topic id không hợp lệ',
+  TOPIC_IS_NOT_EXISTED: 'Topic không tồn tại',
+  TOPIC_IDS_IS_REQUIRED: 'Topic ids là bắt buộc',
+  TOPIC_IDS_IS_EMPTY: 'Topic ids không được rỗng',
+  TOPIC_IDS_IS_INVALID: 'Topic ids không hợp lệ'
 } as const;

@@ -1,11 +1,11 @@
-import { Request } from 'express';
-import { checkSchema, ParamSchema } from 'express-validator';
+import { NextFunction, Request, Response } from 'express';
+import { ParamSchema, checkSchema } from 'express-validator';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import capitalize from 'lodash/capitalize';
 import { ObjectId } from 'mongodb';
 
 import { ENV_CONFIG } from '~/constants/config';
-import { UserGender } from '~/constants/enum';
+import { UserGender, UserRole } from '~/constants/enum';
 import HTTP_STATUS from '~/constants/httpStatus';
 import { USERS_MESSAGES } from '~/constants/messages';
 import { ErrorWithStatus } from '~/models/Errors';
@@ -152,6 +152,20 @@ export const refreshTokenValidator = validate(
     ['body']
   )
 );
+
+// Kiểm tra quyền admin
+export const adminRoleValidator = (req: Request, _: Response, next: NextFunction) => {
+  const { role } = (req as Request).decoded_authorization as TokenPayload;
+  if (role !== UserRole.Admin) {
+    return next(
+      new ErrorWithStatus({
+        message: 'Bạn không có quyền truy cập',
+        status: HTTP_STATUS.FORBIDDEN
+      })
+    );
+  }
+  next();
+};
 
 // Kiểm tra dữ liệu đăng ký
 export const registerValidator = validate(
