@@ -65,3 +65,27 @@ export const TOPICS_MESSAGES = {
   TOPIC_IDS_IS_EMPTY: 'Topic ids không được rỗng',
   TOPIC_IDS_IS_INVALID: 'Topic ids không hợp lệ'
 } as const;
+
+export const QUIZZES_MESSAGES = {
+  QUIZ_NAME_IS_REQUIRED: 'Tên quiz là bắt buộc',
+  QUIZ_NAME_MUST_BE_A_STRING: 'Tên quiz phải là một chuỗi',
+  QUIZ_LEVEL_IS_REQUIRED: 'Level quiz là bắt buộc',
+  QUIZ_LEVEL_IS_INVALID: 'Level quiz không hợp lệ',
+  QUIZ_TOPIC_IS_INVALID: 'Quiz topic không hợp lệ',
+  QUIZ_DESCRIPTION_MUST_BE_A_STRING: 'Mô tả quiz phải là một chuỗi',
+  QUIZ_TOPIC_NOT_EXISTED: 'Quiz topic không tồn tại',
+  CREATE_QUIZ_SUCCESSFULLY: 'Tạo quiz thành công',
+  QUIZ_NAME_IS_EXISTED: 'Tên quiz đã tồn tại',
+  GET_QUIZZES_SUCCESSFULLY: 'Lấy danh sách quiz thành công',
+  UPDATE_QUIZ_SUCCESSFULLY: 'Cập nhật quiz thành công',
+  QUIZ_ID_IS_REQUIRED: 'Quiz id là bắt buộc',
+  QUIZ_ID_IS_INVALID: 'Quiz id không hợp lệ',
+  QUIZ_IS_NOT_EXISTED: 'Quiz không tồn tại',
+  QUIZ_ID_MUST_BE_A_STRING: 'Quiz id phải là một chuỗi',
+  QUIZ_NOT_EXISTED: 'Quiz không tồn tại',
+  QUIZ_IDS_IS_REQUIRED: 'Quiz ids là bắt buộc',
+  QUIZ_IDS_IS_NOT_EMPTY: 'Quiz ids không được rỗng',
+  QUIZ_IDS_IS_INVALID: 'Quiz ids không hợp lệ',
+  QUIZ_IDS_ARE_NOT_EXISTED: 'Quiz ids không tồn tại',
+  QUIZ_IDS_MUST_BE_AN_ARRAY: 'Quiz ids phải là một mảng'
+} as const;

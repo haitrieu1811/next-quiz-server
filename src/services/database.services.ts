@@ -2,6 +2,7 @@ import { Collection, Db, MongoClient } from 'mongodb';
 
 import { ENV_CONFIG } from '~/constants/config';
 import Image from '~/models/schemas/Image.schema';
+import Quiz from '~/models/schemas/Quiz.schema';
 import RefreshToken from '~/models/schemas/RefreshToken.schema';
 import Topic from '~/models/schemas/Topic.schema';
 import User from '~/models/schemas/User.schema';
@@ -47,6 +48,13 @@ class DatabaseService {
     }
   }
 
+  async indexQuizzes() {
+    const isExisted = await this.quizzes.indexExists(['name_1']);
+    if (!isExisted) {
+      await Promise.all([this.quizzes.createIndex({ name: 1 }, { unique: true })]);
+    }
+  }
+
   get users(): Collection<User> {
     return this.db.collection(ENV_CONFIG.DB_USERS_COLLECTION);
   }
@@ -61,6 +69,10 @@ class DatabaseService {
 
   get images(): Collection<Image> {
     return this.db.collection(ENV_CONFIG.DB_IMAGES_COLLECTION);
+  }
+
+  get quizzes(): Collection<Quiz> {
+    return this.db.collection(ENV_CONFIG.DB_QUIZZES_COLLECTION);
   }
 }
 

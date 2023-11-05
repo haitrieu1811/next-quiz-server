@@ -219,8 +219,6 @@ export const loginValidator = validate(
               {
                 projection: {
                   password: 0,
-                  role: 0,
-                  status: 0,
                   forgot_password_token: 0
                 }
               }

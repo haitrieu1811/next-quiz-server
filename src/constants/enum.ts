@@ -21,3 +21,10 @@ export enum TokenType {
   EmailVerifyToken,
   ForgotPasswordToken
 }
+
+export enum QuizLevel {
+  Easy,
+  Medium,
+  Hard,
+  VeryHard
+}
