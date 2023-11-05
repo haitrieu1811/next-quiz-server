@@ -8,6 +8,7 @@ import topicsRouter from './routes/topics.routes';
 import usersRouter from './routes/users.routes';
 import databaseService from './services/database.services';
 import { initFolders } from './utils/file';
+import questionsRouter from './routes/questions.routes';
 
 databaseService.connect().then(() => {
   databaseService.indexUsers();
@@ -24,6 +25,7 @@ app.use('/users', usersRouter);
 app.use('/images', imagesRouter);
 app.use('/topics', topicsRouter);
 app.use('/quizzes', quizzesRouter);
+app.use('/questions', questionsRouter);
 app.use(defaultErrorHandler);
 
 app.listen(port, () => {

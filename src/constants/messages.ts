@@ -89,3 +89,19 @@ export const QUIZZES_MESSAGES = {
   QUIZ_IDS_ARE_NOT_EXISTED: 'Quiz ids không tồn tại',
   QUIZ_IDS_MUST_BE_AN_ARRAY: 'Quiz ids phải là một mảng'
 } as const;
+
+export const QUESTIONS_MESSAGES = {
+  CREATE_QUESTION_SUCCESSFULLY: 'Tạo câu hỏi thành công',
+  QUESTION_NAME_IS_REQUIRED: 'Tên câu hỏi là bắt buộc',
+  QUESTION_NAME_MUST_BE_A_STRING: 'Tên câu hỏi phải là một chuỗi',
+  QUESTION_DESCRIPTION_MUST_BE_A_STRING: 'Mô tả câu hỏi phải là một chuỗi',
+  QUESTION_IMAGES_MUST_BE_AN_ARRAY: 'Ảnh của câu hỏi phải là một mảng',
+  QUESTION_IMAGES_MUST_NOT_BE_EMPTY: 'Ảnh của câu hỏi không được rỗng',
+  QUESTION_IMAGES_IS_INVALID: 'Ảnh của câu hỏi không hợp lệ',
+  QUESTION_ANSWERS_IS_REQUIRED: 'Các câu trả lời là bắt buộc',
+  QUESTION_ANSWERS_IS_INVALID: 'Câu trả lời không hợp lệ',
+  QUESTION_ANSWERS_MUST_BE_AN_ARRAY: 'Các câu trả lời phải là một mảng',
+  QUESTION_ANSWERS_MUST_HAVE_AT_LEAST_TWO_ANSWERS: 'Phải có ít nhất 2 câu trả lời cho câu hỏi',
+  QUESTION_ANSWERS_MUST_HAVE_AT_MOST_SIX_ANSWERS: 'Chỉ được phép có tối đa 6 câu trả lời cho câu hỏi',
+  QUESTION_ANSWERS_MUST_HAVE_ONLY_ONE_CORRECT_ANSWER: 'Yêu cầu có duy nhất 1 câu trả lời đúng cho câu hỏi'
+} as const;

@@ -2,6 +2,7 @@ import { Collection, Db, MongoClient } from 'mongodb';
 
 import { ENV_CONFIG } from '~/constants/config';
 import Image from '~/models/schemas/Image.schema';
+import Question from '~/models/schemas/Question.schema';
 import Quiz from '~/models/schemas/Quiz.schema';
 import RefreshToken from '~/models/schemas/RefreshToken.schema';
 import Topic from '~/models/schemas/Topic.schema';
@@ -73,6 +74,10 @@ class DatabaseService {
 
   get quizzes(): Collection<Quiz> {
     return this.db.collection(ENV_CONFIG.DB_QUIZZES_COLLECTION);
+  }
+
+  get questions(): Collection<Question> {
+    return this.db.collection(ENV_CONFIG.DB_QUESTIONS_COLLECTION);
   }
 }
 
