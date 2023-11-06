@@ -4,6 +4,7 @@ export interface Answer {
   _id?: ObjectId;
   name: string;
   description?: string;
+  images?: ObjectId[];
   is_correct: boolean;
 }
 

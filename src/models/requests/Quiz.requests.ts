@@ -27,8 +27,8 @@ export interface UpdateQuizReqBody {
   description?: string;
 }
 
-// Params: Cập nhật thông tin một quiz
-export interface UpdateQuizReqParams extends ParamsDictionary {
+// Params: Quiz id
+export interface QuizIdReqParams extends ParamsDictionary {
   quiz_id: string;
 }
 

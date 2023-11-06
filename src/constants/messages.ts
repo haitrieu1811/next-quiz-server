@@ -103,5 +103,16 @@ export const QUESTIONS_MESSAGES = {
   QUESTION_ANSWERS_MUST_BE_AN_ARRAY: 'Các câu trả lời phải là một mảng',
   QUESTION_ANSWERS_MUST_HAVE_AT_LEAST_TWO_ANSWERS: 'Phải có ít nhất 2 câu trả lời cho câu hỏi',
   QUESTION_ANSWERS_MUST_HAVE_AT_MOST_SIX_ANSWERS: 'Chỉ được phép có tối đa 6 câu trả lời cho câu hỏi',
-  QUESTION_ANSWERS_MUST_HAVE_ONLY_ONE_CORRECT_ANSWER: 'Yêu cầu có duy nhất 1 câu trả lời đúng cho câu hỏi'
+  QUESTION_ANSWERS_MUST_HAVE_ONLY_ONE_CORRECT_ANSWER: 'Yêu cầu có duy nhất 1 câu trả lời đúng cho câu hỏi',
+  GET_QUESTIONS_SUCCESSFULLY: 'Lấy danh sách câu hỏi thành công',
+  UPDATE_QUESTION_SUCCESSFULLY: 'Cập nhật câu hỏi thành công',
+  QUESTION_ID_IS_REQUIRED: 'Question id là bắt buộc',
+  QUESTION_ID_IS_INVALID: 'Question id không hợp lệ',
+  QUESTION_IS_NOT_EXISTED: 'Question không tồn tại',
+  QUESTION_IDS_IS_REQUIRED: 'Question ids là bắt buộc',
+  QUESTION_IDS_MUST_BE_AN_ARRAY: 'Question ids phải là một mảng',
+  QUESTION_IDS_IS_NOT_EMPTY: 'Question ids không được rỗng',
+  QUESTION_IDS_IS_INVALID: 'Question ids không hợp lệ',
+  QUESTION_IDS_ARE_NOT_EXISTED: 'Question không tồn tại',
+  GET_QUESTION_SUCCESSFULLY: 'Lấy câu hỏi thành công'
 } as const;

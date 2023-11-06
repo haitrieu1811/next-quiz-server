@@ -123,11 +123,13 @@ export const updateQuizValidate = validate(
     {
       name: {
         ...nameSchema,
-        optional: true
+        optional: true,
+        notEmpty: undefined
       },
       level: {
         ...levelSchema,
-        optional: true
+        optional: true,
+        notEmpty: undefined
       },
       topic: topicSchema,
       description: descriptionSchema
