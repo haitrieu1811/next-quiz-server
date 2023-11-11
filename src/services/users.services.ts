@@ -1,4 +1,7 @@
 import { ObjectId, WithId } from 'mongodb';
+import omitBy from 'lodash/omitBy';
+import isUndefined from 'lodash/isUndefined';
+import omit from 'lodash/omit';
 
 import { ENV_CONFIG } from '~/constants/config';
 import { TokenType, UserRole } from '~/constants/enum';
@@ -205,12 +208,22 @@ class UsersService {
 
   // Cập nhật thông tin người dùng hiện tại
   async updateMe({ body, user_id }: { body: UpdateMeReqBody; user_id: string }) {
+    const updateConfig = omitBy(
+      {
+        avatar: body.avatar ? new ObjectId(body.avatar) : undefined,
+        cover: body.cover ? new ObjectId(body.cover) : undefined
+      },
+      isUndefined
+    );
     const user = await databaseService.users.findOneAndUpdate(
       {
         _id: new ObjectId(user_id)
       },
       {
-        $set: body,
+        $set: {
+          ...omit(body, ['avatar', 'cover']),
+          ...updateConfig
+        },
         $currentDate: {
           updated_at: true
         }

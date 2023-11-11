@@ -36,8 +36,8 @@ export type RefreshTokenReqBody = LogoutReqBody;
 export interface UpdateMeReqBody {
   fullname?: string;
   username?: string;
-  avatar?: ObjectId | null;
-  cover?: ObjectId | null;
+  avatar?: string | null;
+  cover?: string | null;
   bio?: string;
   gender?: UserGender;
   phone_number?: string;

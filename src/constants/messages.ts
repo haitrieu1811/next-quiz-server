@@ -43,9 +43,9 @@ export const USERS_MESSAGES = {
   PHONE_NUMBER_ALREADY_EXISTS: 'Số điện thoại đã tồn tại',
   CHANGE_PASSWORD_SUCCESSFULLY: 'Đổi mật khẩu thành công',
   OLD_PASSWORD_IS_INCORRECT: 'Mật khẩu cũ không chính xác',
-  USERNAME_LENGTH_IS_INVALID: 'Username phải có độ dài từ 6 đến 32 ký tự',
-  USERNAME_ALREADY_EXISTS: 'Username đã tồn tại',
-  USERNAME_IS_INVALID: 'Username không được chứa ký tự đặc biệt'
+  USERNAME_LENGTH_IS_INVALID: 'Tên tài khoản phải có độ dài từ 6 đến 32 ký tự',
+  USERNAME_ALREADY_EXISTS: 'Tên tài khoản đã tồn tại',
+  USERNAME_IS_INVALID: 'Tên tài khoản không được chứa ký tự đặc biệt'
 } as const;
 
 export const IMAGES_MESSAGES = {
