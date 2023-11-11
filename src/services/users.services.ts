@@ -1,7 +1,7 @@
-import { ObjectId, WithId } from 'mongodb';
-import omitBy from 'lodash/omitBy';
 import isUndefined from 'lodash/isUndefined';
 import omit from 'lodash/omit';
+import omitBy from 'lodash/omitBy';
+import { ObjectId, WithId } from 'mongodb';
 
 import { ENV_CONFIG } from '~/constants/config';
 import { TokenType, UserRole } from '~/constants/enum';
@@ -103,19 +103,7 @@ class UsersService {
           exp
         })
       ),
-      databaseService.users.findOne(
-        {
-          _id: user_id
-        },
-        {
-          projection: {
-            password: 0,
-            role: 0,
-            status: 0,
-            forgot_password_token: 0
-          }
-        }
-      )
+      this.getUserById(user_id.toString())
     ]);
     return {
       user,
@@ -188,21 +176,104 @@ class UsersService {
     };
   }
 
+  async getUserById(user_id: string) {
+    const users = await databaseService.users
+      .aggregate<User>([
+        {
+          $match: {
+            _id: new ObjectId(user_id)
+          }
+        },
+        {
+          $lookup: {
+            from: 'images',
+            localField: 'avatar',
+            foreignField: '_id',
+            as: 'avatar'
+          }
+        },
+        {
+          $unwind: {
+            path: '$avatar',
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
+          $lookup: {
+            from: 'images',
+            localField: 'cover',
+            foreignField: '_id',
+            as: 'cover'
+          }
+        },
+        {
+          $unwind: {
+            path: '$cover',
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
+          $addFields: {
+            avatar_url: {
+              $concat: [ENV_CONFIG.AWS_S3_BUCKET_IMAGES_URL, '/', '$avatar.name']
+            },
+            cover_url: {
+              $concat: [ENV_CONFIG.AWS_S3_BUCKET_IMAGES_URL, '/', '$cover.name']
+            }
+          }
+        },
+        {
+          $group: {
+            _id: '$_id',
+            email: {
+              $first: '$email'
+            },
+            fullname: {
+              $first: '$fullname'
+            },
+            username: {
+              $first: '$username'
+            },
+            avatar_url: {
+              $first: '$avatar_url'
+            },
+            cover_url: {
+              $first: '$cover_url'
+            },
+            bio: {
+              $first: '$bio'
+            },
+            gender: {
+              $first: '$gender'
+            },
+            phone_number: {
+              $first: '$phone_number'
+            },
+            date_of_birth: {
+              $first: '$date_of_birth'
+            },
+            status: {
+              $first: '$status'
+            },
+            role: {
+              $first: '$role'
+            },
+            created_at: {
+              $first: '$created_at'
+            },
+            updated_at: {
+              $first: '$updated_at'
+            }
+          }
+        }
+      ])
+      .toArray();
+    return users[0];
+  }
+
   // Lấy thông tin người dùng hiện tại (chỉ khi đã đăng nhập)
   async getMe(user_id: string) {
-    const user = await databaseService.users.findOne(
-      {
-        _id: new ObjectId(user_id)
-      },
-      {
-        projection: {
-          password: 0,
-          role: 0,
-          status: 0,
-          forgot_password_token: 0
-        }
-      }
-    );
+    const user = await this.getUserById(user_id);
     return user;
   }
 
@@ -215,7 +286,7 @@ class UsersService {
       },
       isUndefined
     );
-    const user = await databaseService.users.findOneAndUpdate(
+    await databaseService.users.updateOne(
       {
         _id: new ObjectId(user_id)
       },
@@ -227,17 +298,9 @@ class UsersService {
         $currentDate: {
           updated_at: true
         }
-      },
-      {
-        projection: {
-          password: 0,
-          role: 0,
-          status: 0,
-          forgot_password_token: 0
-        },
-        returnDocument: 'after'
       }
     );
+    const user = await this.getUserById(user_id);
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
       user_id: (user as WithId<User>)._id.toString(),
       role: (user as WithId<User>).role

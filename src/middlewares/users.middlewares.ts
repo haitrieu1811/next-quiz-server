@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ParamSchema, checkSchema } from 'express-validator';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import capitalize from 'lodash/capitalize';
-import { ObjectId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
 
 import { ENV_CONFIG } from '~/constants/config';
 import { UserGender, UserRole } from '~/constants/enum';
@@ -10,7 +10,9 @@ import HTTP_STATUS from '~/constants/httpStatus';
 import { USERS_MESSAGES } from '~/constants/messages';
 import { ErrorWithStatus } from '~/models/Errors';
 import { TokenPayload } from '~/models/requests/User.requests';
+import User from '~/models/schemas/User.schema';
 import databaseService from '~/services/database.services';
+import usersService from '~/services/users.services';
 import { numberEnumToArray } from '~/utils/common';
 import { hashPassword } from '~/utils/crypto';
 import { verifyToken } from '~/utils/jwt';
@@ -211,22 +213,15 @@ export const loginValidator = validate(
         custom: {
           options: async (value: string, { req }) => {
             const { email } = req.body;
-            const user = await databaseService.users.findOne(
-              {
-                email,
-                password: hashPassword(value)
-              },
-              {
-                projection: {
-                  password: 0,
-                  forgot_password_token: 0
-                }
-              }
-            );
+            const user = await databaseService.users.findOne({
+              email,
+              password: hashPassword(value)
+            });
+            const userInfo = await usersService.getUserById((user as WithId<User>)._id.toString());
             if (!user) {
               throw new Error(USERS_MESSAGES.EMAIL_OR_PASSWORD_IS_INCORRECT);
             }
-            (req as Request).user = user;
+            (req as Request).user = userInfo;
             return true;
           }
         }
