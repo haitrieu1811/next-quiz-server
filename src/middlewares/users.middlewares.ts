@@ -316,14 +316,11 @@ export const updateMeValidator = validate(
       phone_number: {
         optional: true,
         trim: true,
-        isString: {
-          errorMessage: USERS_MESSAGES.PHONE_NUMBER_MUST_BE_A_STRING
-        },
-        isMobilePhone: {
-          errorMessage: USERS_MESSAGES.PHONE_NUMBER_IS_INVALID
-        },
         custom: {
           options: async (value: string, { req }) => {
+            if (!/(84|0[3|5|7|8|9])+([0-9]{8})\b/.test(value)) {
+              throw new Error(USERS_MESSAGES.PHONE_NUMBER_IS_INVALID);
+            }
             const { user_id } = (req as Request).decoded_authorization as TokenPayload;
             const user = await databaseService.users.findOne({ phone_number: value });
             if (user && user._id.toString() !== user_id) {
@@ -335,7 +332,7 @@ export const updateMeValidator = validate(
       },
       date_of_birth: {
         optional: true,
-        isDate: {
+        isISO8601: {
           errorMessage: USERS_MESSAGES.DATE_OF_BIRTH_IS_INVALID
         }
       }

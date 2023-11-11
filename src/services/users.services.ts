@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
 
 import { ENV_CONFIG } from '~/constants/config';
 import { TokenType, UserRole } from '~/constants/enum';
@@ -225,7 +225,15 @@ class UsersService {
         returnDocument: 'after'
       }
     );
-    return user;
+    const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
+      user_id: (user as WithId<User>)._id.toString(),
+      role: (user as WithId<User>).role
+    });
+    return {
+      user,
+      access_token,
+      refresh_token
+    };
   }
 
   // Đổi mật khẩu

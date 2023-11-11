@@ -90,10 +90,12 @@ export const getMeController = async (req: Request, res: Response) => {
 // Cập nhật thông tin người dùng hiện tại
 export const updateMeController = async (req: Request<ParamsDictionary, any, UpdateMeReqBody>, res: Response) => {
   const { user_id } = req.decoded_authorization as TokenPayload;
-  const user = await usersService.updateMe({ body: req.body, user_id });
+  const { user, access_token, refresh_token } = await usersService.updateMe({ body: req.body, user_id });
   return res.json({
     message: USERS_MESSAGES.UPDATE_ME_SUCCESSFULLY,
     data: {
+      access_token,
+      refresh_token,
       user
     }
   });

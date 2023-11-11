@@ -1,5 +1,7 @@
 import { ObjectId } from 'mongodb';
+
 import { UserGender, UserRole, UserStatus } from '~/constants/enum';
+import { generateRandomString } from '~/utils/common';
 
 interface UserConstructor {
   _id?: ObjectId;
@@ -61,7 +63,7 @@ export default class User {
     this.email = email;
     this.password = password;
     this.fullname = fullname || '';
-    this.username = username || email;
+    this.username = username || `Temp${generateRandomString(12)}`;
     this.avatar = avatar || null;
     this.cover = cover || null;
     this.bio = bio || '';
