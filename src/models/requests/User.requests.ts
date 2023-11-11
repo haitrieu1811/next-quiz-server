@@ -35,6 +35,7 @@ export type RefreshTokenReqBody = LogoutReqBody;
 // Body: Cập nhật thông tin người dùng
 export interface UpdateMeReqBody {
   fullname?: string;
+  username?: string;
   avatar?: ObjectId | null;
   cover?: ObjectId | null;
   bio?: string;

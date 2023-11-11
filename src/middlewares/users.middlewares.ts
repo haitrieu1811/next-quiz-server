@@ -242,7 +242,6 @@ export const updateMeValidator = validate(
     {
       fullname: {
         optional: true,
-        trim: true,
         isString: {
           errorMessage: USERS_MESSAGES.FULLNAME_MUST_BE_A_STRING
         },
@@ -252,7 +251,32 @@ export const updateMeValidator = validate(
             min: 2,
             max: 32
           }
-        }
+        },
+        trim: true
+      },
+      username: {
+        optional: true,
+        isLength: {
+          errorMessage: USERS_MESSAGES.USERNAME_LENGTH_IS_INVALID,
+          options: {
+            min: 6,
+            max: 32
+          }
+        },
+        isAlphanumeric: {
+          errorMessage: USERS_MESSAGES.USERNAME_IS_INVALID
+        },
+        custom: {
+          options: async (value: string, { req }) => {
+            const { user_id } = (req as Request).decoded_authorization as TokenPayload;
+            const user = await databaseService.users.findOne({ username: value });
+            if (user && user._id.toString() !== user_id) {
+              throw new Error(USERS_MESSAGES.USERNAME_ALREADY_EXISTS);
+            }
+            return true;
+          }
+        },
+        trim: true
       },
       avatar: {
         optional: true,

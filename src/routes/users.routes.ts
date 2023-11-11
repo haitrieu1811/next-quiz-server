@@ -49,7 +49,8 @@ usersRouter.patch(
     'date_of_birth',
     'fullname',
     'gender',
-    'phone_number'
+    'phone_number',
+    'username'
   ]),
   wrapRequestHandler(updateMeController)
 );
