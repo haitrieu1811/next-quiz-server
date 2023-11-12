@@ -7,7 +7,7 @@ import { ENV_CONFIG } from '~/constants/config';
 import { TokenType, UserRole } from '~/constants/enum';
 import { RegisterReqBody, UpdateMeReqBody } from '~/models/requests/User.requests';
 import RefreshToken from '~/models/schemas/RefreshToken.schema';
-import User from '~/models/schemas/User.schema';
+import User, { UserResult } from '~/models/schemas/User.schema';
 import { hashPassword } from '~/utils/crypto';
 import { signToken, verifyToken } from '~/utils/jwt';
 import databaseService from './database.services';
@@ -176,12 +176,109 @@ class UsersService {
     };
   }
 
+  // Lấy thông tin người dùng theo id
   async getUserById(user_id: string) {
     const users = await databaseService.users
-      .aggregate<User>([
+      .aggregate<UserResult>([
         {
           $match: {
             _id: new ObjectId(user_id)
+          }
+        },
+        {
+          $lookup: {
+            from: 'images',
+            localField: 'avatar',
+            foreignField: '_id',
+            as: 'avatar'
+          }
+        },
+        {
+          $unwind: {
+            path: '$avatar',
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
+          $lookup: {
+            from: 'images',
+            localField: 'cover',
+            foreignField: '_id',
+            as: 'cover'
+          }
+        },
+        {
+          $unwind: {
+            path: '$cover',
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
+          $addFields: {
+            avatar_url: {
+              $concat: [ENV_CONFIG.AWS_S3_BUCKET_IMAGES_URL, '/', '$avatar.name']
+            },
+            cover_url: {
+              $concat: [ENV_CONFIG.AWS_S3_BUCKET_IMAGES_URL, '/', '$cover.name']
+            }
+          }
+        },
+        {
+          $group: {
+            _id: '$_id',
+            email: {
+              $first: '$email'
+            },
+            fullname: {
+              $first: '$fullname'
+            },
+            username: {
+              $first: '$username'
+            },
+            avatar_url: {
+              $first: '$avatar_url'
+            },
+            cover_url: {
+              $first: '$cover_url'
+            },
+            bio: {
+              $first: '$bio'
+            },
+            gender: {
+              $first: '$gender'
+            },
+            phone_number: {
+              $first: '$phone_number'
+            },
+            date_of_birth: {
+              $first: '$date_of_birth'
+            },
+            status: {
+              $first: '$status'
+            },
+            role: {
+              $first: '$role'
+            },
+            created_at: {
+              $first: '$created_at'
+            },
+            updated_at: {
+              $first: '$updated_at'
+            }
+          }
+        }
+      ])
+      .toArray();
+    return users[0];
+  }
+
+  // Lấy thông tin người dùng theo username
+  async getUserByUsername(username: string) {
+    const users = await databaseService.users
+      .aggregate<UserResult>([
+        {
+          $match: {
+            username
           }
         },
         {
@@ -302,8 +399,8 @@ class UsersService {
     );
     const user = await this.getUserById(user_id);
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
-      user_id: (user as WithId<User>)._id.toString(),
-      role: (user as WithId<User>).role
+      user_id: (user as WithId<UserResult>)._id.toString(),
+      role: (user as WithId<UserResult>).role
     });
     return {
       user,

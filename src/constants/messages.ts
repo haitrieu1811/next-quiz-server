@@ -45,7 +45,10 @@ export const USERS_MESSAGES = {
   OLD_PASSWORD_IS_INCORRECT: 'Mật khẩu cũ không chính xác',
   USERNAME_LENGTH_IS_INVALID: 'Tên tài khoản phải có độ dài từ 6 đến 32 ký tự',
   USERNAME_ALREADY_EXISTS: 'Tên tài khoản đã tồn tại',
-  USERNAME_IS_INVALID: 'Tên tài khoản không được chứa ký tự đặc biệt'
+  GET_USER_BY_USERNAME_SUCCESSFULLY: 'Lấy thông tin người dùng thành công',
+  USERNAME_IS_REQUIRED: 'Tên tài khoản là bắt buộc',
+  USERNAME_IS_INVALID: 'Tên tài khoản không hợp lệ',
+  USER_NOT_FOUND: 'Người dùng không tồn tại'
 } as const;
 
 export const IMAGES_MESSAGES = {

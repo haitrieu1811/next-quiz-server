@@ -62,7 +62,7 @@ export default class User {
     this._id = _id;
     this.email = email;
     this.password = password;
-    this.fullname = fullname || '';
+    this.fullname = fullname || `Temp${generateRandomString(12)}`;
     this.username = username || `Temp${generateRandomString(12)}`;
     this.avatar = avatar || null;
     this.cover = cover || null;
@@ -76,4 +76,21 @@ export default class User {
     this.created_at = created_at || date;
     this.updated_at = updated_at || date;
   }
+}
+
+export interface UserResult {
+  _id: ObjectId;
+  email: string;
+  fullname: string;
+  username: string;
+  avatar_url: string | null;
+  cover_url: string | null;
+  bio: string;
+  gender: UserGender;
+  phone_number: string;
+  date_of_birth: string;
+  status: UserStatus;
+  role: UserRole;
+  created_at: string;
+  updated_at: string;
 }

@@ -11,7 +11,7 @@ import {
   TokenPayload,
   UpdateMeReqBody
 } from '~/models/requests/User.requests';
-import User from '~/models/schemas/User.schema';
+import { UserResult } from '~/models/schemas/User.schema';
 import usersService from '~/services/users.services';
 
 // Đăng ký
@@ -29,7 +29,7 @@ export const registerController = async (req: Request<ParamsDictionary, any, Reg
 
 // Đăng nhập
 export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
-  const user = req.user as User;
+  const user = req.user as UserResult;
   const { access_token, refresh_token } = await usersService.login({
     user_id: (user._id as ObjectId).toString(),
     role: user.role
@@ -111,5 +111,16 @@ export const changePasswordController = async (
   await usersService.changePassword({ new_password, user_id });
   return res.json({
     message: USERS_MESSAGES.CHANGE_PASSWORD_SUCCESSFULLY
+  });
+};
+
+// Lấy thông tin người dùng theo username
+export const getUserByUsernameController = async (req: Request, res: Response) => {
+  const user = req.user as UserResult;
+  return res.json({
+    message: USERS_MESSAGES.GET_USER_BY_USERNAME_SUCCESSFULLY,
+    data: {
+      user
+    }
   });
 };

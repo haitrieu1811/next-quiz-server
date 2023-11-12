@@ -3,6 +3,7 @@ import { Router } from 'express';
 import {
   changePasswordController,
   getMeController,
+  getUserByUsernameController,
   loginController,
   logoutController,
   refreshTokenController,
@@ -15,7 +16,8 @@ import {
   loginValidator,
   refreshTokenValidator,
   registerValidator,
-  updateMeValidator
+  updateMeValidator,
+  usernameValidator
 } from '~/middlewares/users.middlewares';
 import { UpdateMeReqBody } from '~/models/requests/User.requests';
 import { filterReqBodyMiddleware, wrapRequestHandler } from '~/utils/handler';
@@ -62,5 +64,8 @@ usersRouter.patch(
   changePasswordValidator,
   wrapRequestHandler(changePasswordController)
 );
+
+// Lấy thông tin người dùng theo username
+usersRouter.get('/:username', usernameValidator, wrapRequestHandler(getUserByUsernameController));
 
 export default usersRouter;

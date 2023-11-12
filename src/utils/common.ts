@@ -10,3 +10,8 @@ export const generateRandomString = (length: number): string => {
   }
   return result;
 };
+
+export const isAlphanumeric = (input: string): boolean => {
+  const regExp = /^[A-Za-z0-9]+$/;
+  return regExp.test(input);
+};

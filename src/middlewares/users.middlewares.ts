@@ -13,7 +13,7 @@ import { TokenPayload } from '~/models/requests/User.requests';
 import User from '~/models/schemas/User.schema';
 import databaseService from '~/services/database.services';
 import usersService from '~/services/users.services';
-import { numberEnumToArray } from '~/utils/common';
+import { isAlphanumeric, numberEnumToArray } from '~/utils/common';
 import { hashPassword } from '~/utils/crypto';
 import { verifyToken } from '~/utils/jwt';
 import { validate } from '~/utils/validation';
@@ -359,5 +359,42 @@ export const changePasswordValidator = validate(
       confirm_password: confirmPasswordSchema
     },
     ['body']
+  )
+);
+
+// Kiểm tra username có hợp lệ hay không
+export const usernameValidator = validate(
+  checkSchema(
+    {
+      username: {
+        trim: true,
+        custom: {
+          options: async (value: string, { req }) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.USERNAME_IS_REQUIRED,
+                status: HTTP_STATUS.BAD_REQUEST
+              });
+            }
+            if (!isAlphanumeric(value)) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.USERNAME_IS_INVALID,
+                status: HTTP_STATUS.BAD_REQUEST
+              });
+            }
+            const user = await usersService.getUserByUsername(value);
+            if (!user) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.USER_NOT_FOUND,
+                status: HTTP_STATUS.NOT_FOUND
+              });
+            }
+            (req as Request).user = user;
+            return true;
+          }
+        }
+      }
+    },
+    ['params']
   )
 );
