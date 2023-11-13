@@ -7,7 +7,7 @@ interface QuizConstructor {
   name: string;
   thumbnail?: ObjectId;
   level: QuizLevel;
-  topic_id?: ObjectId;
+  topic_id: ObjectId;
   description?: string;
   created_at?: Date;
   updated_at?: Date;
@@ -19,7 +19,7 @@ export default class Quiz {
   name: string;
   thumbnail: ObjectId | null;
   level: QuizLevel;
-  topic_id: ObjectId | null;
+  topic_id: ObjectId;
   description: string;
   created_at: Date;
   updated_at: Date;

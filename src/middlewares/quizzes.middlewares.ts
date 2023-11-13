@@ -84,7 +84,14 @@ export const createQuizValidate = validate(
       name: nameSchema,
       level: levelSchema,
       topic_id: topicIdSchema,
-      description: descriptionSchema
+      description: descriptionSchema,
+      thumbnail: {
+        optional: true,
+        isMongoId: {
+          errorMessage: QUIZZES_MESSAGES.QUIZ_THUBMNAIL_IS_INVALID
+        },
+        trim: true
+      }
     },
     ['body']
   )

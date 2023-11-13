@@ -25,7 +25,7 @@ quizzesRouter.post(
   '/',
   accessTokenValidator,
   createQuizValidate,
-  filterReqBodyMiddleware<CreateQuizReqBody>(['name', 'description', 'level', 'topic_id']),
+  filterReqBodyMiddleware<CreateQuizReqBody>(['name', 'description', 'level', 'topic_id', 'thumbnail']),
   wrapRequestHandler(createQuizController)
 );
 
@@ -39,7 +39,7 @@ quizzesRouter.patch(
   quizIdValidate,
   authorQuizValidate,
   updateQuizValidate,
-  filterReqBodyMiddleware<CreateQuizReqBody>(['name', 'description', 'level', 'topic_id']),
+  filterReqBodyMiddleware<CreateQuizReqBody>(['name', 'description', 'level', 'topic_id', 'thumbnail']),
   wrapRequestHandler(updateQuizController)
 );
 

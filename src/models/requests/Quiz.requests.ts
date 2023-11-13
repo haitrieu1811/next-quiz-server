@@ -8,8 +8,9 @@ import { PaginationReqQuery } from './Common.requests';
 export interface CreateQuizReqBody {
   name: string;
   level: QuizLevel;
-  topic_id?: string;
+  topic_id: string;
   description?: string;
+  thumbnail?: string;
 }
 
 // Query: Lấy danh sách quiz
@@ -25,6 +26,7 @@ export interface UpdateQuizReqBody {
   level?: QuizLevel;
   topic_id?: string;
   description?: string;
+  thumbnail?: string;
 }
 
 // Params: Quiz id

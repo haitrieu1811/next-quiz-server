@@ -12,8 +12,9 @@ class QuizzesService {
     const { insertedId } = await databaseService.quizzes.insertOne(
       new Quiz({
         ...body,
-        topic_id: body.topic_id ? new ObjectId(body.topic_id) : undefined,
-        user_id: new ObjectId(user_id)
+        topic_id: new ObjectId(body.topic_id),
+        user_id: new ObjectId(user_id),
+        thumbnail: body.thumbnail ? new ObjectId(body.thumbnail) : undefined
       })
     );
     const quiz = await databaseService.quizzes.findOne({ _id: insertedId });
@@ -63,7 +64,8 @@ class QuizzesService {
           ...omitBy(
             {
               ...body,
-              topic_id: body.topic_id ? new ObjectId(body.topic_id) : undefined
+              topic_id: body.topic_id ? new ObjectId(body.topic_id) : undefined,
+              thumbnail: body.thumbnail ? new ObjectId(body.thumbnail) : undefined
             },
             isUndefined
           )
