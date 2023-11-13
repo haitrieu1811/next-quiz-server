@@ -5,6 +5,7 @@ import { ObjectId } from 'mongodb';
 import { CreateQuizReqBody, GetQuizzesReqQuery, UpdateQuizReqBody } from '~/models/requests/Quiz.requests';
 import Quiz from '~/models/schemas/Quiz.schema';
 import databaseService from './database.services';
+import { ENV_CONFIG } from '~/constants/config';
 
 class QuizzesService {
   // Tạo một quiz mới
@@ -25,24 +26,172 @@ class QuizzesService {
 
   // Lấy danh sách các quiz
   async getQuizzes(query: GetQuizzesReqQuery) {
-    const { name, level, topic, limit, page } = query;
+    const { name, level, topic, limit, page, user_id } = query;
     const _page = Number(page) || 1;
     const _limit = Number(limit) || 20;
     const queryConfig = omitBy(
       {
         name,
         level,
-        topic
+        topic,
+        user_id: user_id ? new ObjectId(user_id) : undefined
       },
       isUndefined
     );
     const [quizzes, total] = await Promise.all([
       databaseService.quizzes
-        .find(queryConfig)
-        .skip((_page - 1) * _limit)
-        .limit(_limit)
+        .aggregate([
+          {
+            $match: queryConfig
+          },
+          {
+            $lookup: {
+              from: 'users',
+              localField: 'user_id',
+              foreignField: '_id',
+              as: 'author'
+            }
+          },
+          {
+            $unwind: {
+              path: '$author'
+            }
+          },
+          {
+            $lookup: {
+              from: 'images',
+              localField: 'thumbnail',
+              foreignField: '_id',
+              as: 'thumbnail'
+            }
+          },
+          {
+            $unwind: {
+              path: '$thumbnail',
+              preserveNullAndEmptyArrays: true
+            }
+          },
+          {
+            $lookup: {
+              from: 'topics',
+              localField: 'topic_id',
+              foreignField: '_id',
+              as: 'topic'
+            }
+          },
+          {
+            $unwind: {
+              path: '$topic'
+            }
+          },
+          {
+            $lookup: {
+              from: 'images',
+              localField: 'author.avatar',
+              foreignField: '_id',
+              as: 'author_avatar'
+            }
+          },
+          {
+            $unwind: {
+              path: '$author_avatar',
+              preserveNullAndEmptyArrays: true
+            }
+          },
+          {
+            $lookup: {
+              from: 'images',
+              localField: 'author.cover',
+              foreignField: '_id',
+              as: 'author_cover'
+            }
+          },
+          {
+            $unwind: {
+              path: '$author_cover',
+              preserveNullAndEmptyArrays: true
+            }
+          },
+          {
+            $addFields: {
+              thumbnail_url: {
+                $cond: {
+                  if: '$thumbnail',
+                  then: {
+                    $concat: [ENV_CONFIG.AWS_S3_BUCKET_IMAGES_URL, '/', '$thumbnail.name']
+                  },
+                  else: ''
+                }
+              },
+              'author.avatar': {
+                $cond: {
+                  if: '$author_avatar',
+                  then: {
+                    $concat: [ENV_CONFIG.AWS_S3_BUCKET_IMAGES_URL, '/', '$author_avatar.name']
+                  },
+                  else: ''
+                }
+              },
+              'author.cover': {
+                $cond: {
+                  if: '$author_cover',
+                  then: {
+                    $concat: [ENV_CONFIG.AWS_S3_BUCKET_IMAGES_URL, '/', '$author_cover.name']
+                  },
+                  else: ''
+                }
+              }
+            }
+          },
+          {
+            $group: {
+              _id: '$_id',
+              name: {
+                $first: '$name'
+              },
+              description: {
+                $first: '$description'
+              },
+              thumbnail: {
+                $first: '$thumbnail_url'
+              },
+              level: {
+                $first: '$level'
+              },
+              author: {
+                $first: '$author'
+              },
+              topic: {
+                $first: '$topic'
+              },
+              created_at: {
+                $first: '$created_at'
+              },
+              updated_at: {
+                $first: '$updated_at'
+              }
+            }
+          },
+          {
+            $project: {
+              'author.password': 0,
+              'author.forgot_password_token': 0
+            }
+          },
+          {
+            $sort: {
+              created_at: -1
+            }
+          },
+          {
+            $skip: (_page - 1) * _limit
+          },
+          {
+            $limit: _limit
+          }
+        ])
         .toArray(),
-      databaseService.quizzes.countDocuments({})
+      databaseService.quizzes.countDocuments({ queryConfig })
     ]);
     return {
       quizzes,

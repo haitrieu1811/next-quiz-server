@@ -1,5 +1,4 @@
 import { ParamsDictionary } from 'express-serve-static-core';
-import { ObjectId } from 'mongodb';
 
 import { QuizLevel } from '~/constants/enum';
 import { PaginationReqQuery } from './Common.requests';
@@ -17,7 +16,8 @@ export interface CreateQuizReqBody {
 export interface GetQuizzesReqQuery extends PaginationReqQuery {
   name?: string;
   level?: QuizLevel;
-  topic?: ObjectId;
+  topic?: string;
+  user_id?: string;
 }
 
 // Body: Cập nhật thông tin một quiz
