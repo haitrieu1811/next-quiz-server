@@ -1,11 +1,17 @@
 import { ParamSchema, checkSchema } from 'express-validator';
-import { ObjectId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
+import { NextFunction, Request, Response } from 'express';
 
 import { QuizLevel } from '~/constants/enum';
 import { QUIZZES_MESSAGES } from '~/constants/messages';
 import databaseService from '~/services/database.services';
 import { numberEnumToArray } from '~/utils/common';
 import { validate } from '~/utils/validation';
+import { QuizIdReqParams } from '~/models/requests/Quiz.requests';
+import { TokenPayload } from '~/models/requests/User.requests';
+import Quiz from '~/models/schemas/Quiz.schema';
+import { ErrorWithStatus } from '~/models/Errors';
+import HTTP_STATUS from '~/constants/httpStatus';
 
 const quizLevels = numberEnumToArray(QuizLevel);
 
@@ -17,14 +23,12 @@ const nameSchema: ParamSchema = {
   isString: {
     errorMessage: QUIZZES_MESSAGES.QUIZ_NAME_MUST_BE_A_STRING
   },
-  custom: {
-    options: async (value: string) => {
-      const quiz = await databaseService.quizzes.findOne({ name: value });
-      if (quiz) {
-        throw new Error(QUIZZES_MESSAGES.QUIZ_NAME_IS_EXISTED);
-      }
-      return true;
-    }
+  isLength: {
+    options: {
+      min: 6,
+      max: 255
+    },
+    errorMessage: QUIZZES_MESSAGES.QUIZ_NAME_LENGTH_IS_INVALID
   },
   trim: true
 };
@@ -41,7 +45,7 @@ const levelSchema: ParamSchema = {
 };
 
 // Topic quiz
-const topicSchema: ParamSchema = {
+const topicIdSchema: ParamSchema = {
   optional: true,
   custom: {
     options: async (value: string) => {
@@ -63,6 +67,13 @@ const descriptionSchema: ParamSchema = {
   isString: {
     errorMessage: QUIZZES_MESSAGES.QUIZ_DESCRIPTION_MUST_BE_A_STRING
   },
+  isLength: {
+    options: {
+      min: 20,
+      max: 1000
+    },
+    errorMessage: QUIZZES_MESSAGES.QUIZ_DESCRIPTION_LENGTH_IS_INVALID
+  },
   trim: true
 };
 
@@ -72,7 +83,7 @@ export const createQuizValidate = validate(
     {
       name: nameSchema,
       level: levelSchema,
-      topic: topicSchema,
+      topic_id: topicIdSchema,
       description: descriptionSchema
     },
     ['body']
@@ -117,6 +128,22 @@ export const getQuizzesValidate = validate(
   )
 );
 
+// Kiểm tra có phải tác giả của quiz hay không
+export const authorQuizValidate = async (req: Request<QuizIdReqParams>, res: Response, next: NextFunction) => {
+  const { quiz_id } = req.params;
+  const { user_id } = req.decoded_authorization as TokenPayload;
+  const quiz = (await databaseService.quizzes.findOne({ _id: new ObjectId(quiz_id) })) as WithId<Quiz>;
+  if (quiz.user_id.toString() !== user_id) {
+    return next(
+      new ErrorWithStatus({
+        message: QUIZZES_MESSAGES.QUIZ_NOT_AUTHOR,
+        status: HTTP_STATUS.FORBIDDEN
+      })
+    );
+  }
+  return next();
+};
+
 // Cập nhật thông tin một quiz
 export const updateQuizValidate = validate(
   checkSchema(
@@ -131,7 +158,7 @@ export const updateQuizValidate = validate(
         optional: true,
         notEmpty: undefined
       },
-      topic: topicSchema,
+      topic_id: topicIdSchema,
       description: descriptionSchema
     },
     ['body']

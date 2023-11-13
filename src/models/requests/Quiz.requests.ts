@@ -8,7 +8,7 @@ import { PaginationReqQuery } from './Common.requests';
 export interface CreateQuizReqBody {
   name: string;
   level: QuizLevel;
-  topic?: ObjectId;
+  topic_id?: string;
   description?: string;
 }
 
@@ -23,7 +23,7 @@ export interface GetQuizzesReqQuery extends PaginationReqQuery {
 export interface UpdateQuizReqBody {
   name?: string;
   level?: QuizLevel;
-  topic?: ObjectId;
+  topic_id?: string;
   description?: string;
 }
 

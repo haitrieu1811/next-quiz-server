@@ -2,12 +2,19 @@ import { Request, Response } from 'express';
 import { ParamsDictionary } from 'express-serve-static-core';
 
 import { QUIZZES_MESSAGES } from '~/constants/messages';
-import { DeleteQuizzesReqBody, GetQuizzesReqQuery, UpdateQuizReqBody } from '~/models/requests/Quiz.requests';
+import {
+  CreateQuizReqBody,
+  DeleteQuizzesReqBody,
+  GetQuizzesReqQuery,
+  UpdateQuizReqBody
+} from '~/models/requests/Quiz.requests';
+import { TokenPayload } from '~/models/requests/User.requests';
 import quizzesService from '~/services/quizzes.services';
 
 // Tạo một quiz mới
-export const createQuizController = async (req: Request, res: Response) => {
-  const { quiz } = await quizzesService.createQuiz(req.body);
+export const createQuizController = async (req: Request<ParamsDictionary, any, CreateQuizReqBody>, res: Response) => {
+  const { user_id } = req.decoded_authorization as TokenPayload;
+  const { quiz } = await quizzesService.createQuiz({ body: req.body, user_id });
   return res.json({
     messsage: QUIZZES_MESSAGES.CREATE_QUIZ_SUCCESSFULLY,
     data: {

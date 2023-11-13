@@ -8,8 +8,14 @@ import databaseService from './database.services';
 
 class QuizzesService {
   // Tạo một quiz mới
-  async createQuiz(body: CreateQuizReqBody) {
-    const { insertedId } = await databaseService.quizzes.insertOne(new Quiz(body));
+  async createQuiz({ body, user_id }: { body: CreateQuizReqBody; user_id: string }) {
+    const { insertedId } = await databaseService.quizzes.insertOne(
+      new Quiz({
+        ...body,
+        topic_id: body.topic_id ? new ObjectId(body.topic_id) : undefined,
+        user_id: new ObjectId(user_id)
+      })
+    );
     const quiz = await databaseService.quizzes.findOne({ _id: insertedId });
     return {
       quiz
@@ -53,7 +59,15 @@ class QuizzesService {
         _id: new ObjectId(quiz_id)
       },
       {
-        $set: body,
+        $set: {
+          ...omitBy(
+            {
+              ...body,
+              topic_id: body.topic_id ? new ObjectId(body.topic_id) : undefined
+            },
+            isUndefined
+          )
+        },
         $currentDate: {
           updated_at: true
         }

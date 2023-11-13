@@ -7,6 +7,7 @@ import {
   updateQuizController
 } from '~/controllers/quizzes.controllers';
 import {
+  authorQuizValidate,
   createQuizValidate,
   deleteQuizzesValidate,
   getQuizzesValidate,
@@ -23,9 +24,8 @@ const quizzesRouter = Router();
 quizzesRouter.post(
   '/',
   accessTokenValidator,
-  adminRoleValidator,
   createQuizValidate,
-  filterReqBodyMiddleware<CreateQuizReqBody>(['name', 'description', 'level', 'topic']),
+  filterReqBodyMiddleware<CreateQuizReqBody>(['name', 'description', 'level', 'topic_id']),
   wrapRequestHandler(createQuizController)
 );
 
@@ -36,10 +36,10 @@ quizzesRouter.get('/', getQuizzesValidate, wrapRequestHandler(getQuizzesControll
 quizzesRouter.patch(
   '/:quiz_id',
   accessTokenValidator,
-  adminRoleValidator,
   quizIdValidate,
+  authorQuizValidate,
   updateQuizValidate,
-  filterReqBodyMiddleware<CreateQuizReqBody>(['name', 'description', 'level', 'topic']),
+  filterReqBodyMiddleware<CreateQuizReqBody>(['name', 'description', 'level', 'topic_id']),
   wrapRequestHandler(updateQuizController)
 );
 
