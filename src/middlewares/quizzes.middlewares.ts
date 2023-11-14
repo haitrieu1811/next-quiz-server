@@ -186,11 +186,17 @@ export const quizIdValidate = validate(
         custom: {
           options: async (value: string) => {
             if (!ObjectId.isValid(value)) {
-              throw new Error(QUIZZES_MESSAGES.QUIZ_ID_IS_INVALID);
+              throw new ErrorWithStatus({
+                message: QUIZZES_MESSAGES.QUIZ_ID_IS_INVALID,
+                status: HTTP_STATUS.BAD_REQUEST
+              });
             }
             const quiz = await databaseService.quizzes.findOne({ _id: new ObjectId(value) });
             if (!quiz) {
-              throw new Error(QUIZZES_MESSAGES.QUIZ_NOT_EXISTED);
+              throw new ErrorWithStatus({
+                message: QUIZZES_MESSAGES.QUIZ_IS_NOT_EXISTED,
+                status: HTTP_STATUS.NOT_FOUND
+              });
             }
             return true;
           }

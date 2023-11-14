@@ -3,6 +3,7 @@ import { Router } from 'express';
 import {
   createQuizController,
   deleteQuizzesController,
+  getQuizController,
   getQuizzesController,
   updateQuizController
 } from '~/controllers/quizzes.controllers';
@@ -31,6 +32,9 @@ quizzesRouter.post(
 
 // Lấy danh sách các quiz
 quizzesRouter.get('/', getQuizzesValidate, wrapRequestHandler(getQuizzesController));
+
+// Lấy thông tin một quiz
+quizzesRouter.get('/:quiz_id', quizIdValidate, wrapRequestHandler(getQuizController));
 
 // Cập nhật thông tin một quiz
 quizzesRouter.patch(

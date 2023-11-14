@@ -96,7 +96,8 @@ export const QUIZZES_MESSAGES = {
   QUIZ_NOT_AUTHOR: 'Bạn không phải là tác giả của quiz này',
   QUIZ_NAME_LENGTH_IS_INVALID: 'Tên quiz phải có độ dài từ 6 đến 255 ký tự',
   QUIZ_DESCRIPTION_LENGTH_IS_INVALID: 'Mô tả quiz phải có độ dài từ 20 đến 1000 ký tự',
-  QUIZ_THUBMNAIL_IS_INVALID: 'Ảnh đại diện của quiz không hợp lệ'
+  QUIZ_THUBMNAIL_IS_INVALID: 'Ảnh đại diện của quiz không hợp lệ',
+  GET_QUIZ_SUCCESSFULLY: 'Lấy thông tin quiz thành công'
 } as const;
 
 export const QUESTIONS_MESSAGES = {

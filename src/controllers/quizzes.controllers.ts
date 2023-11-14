@@ -6,6 +6,7 @@ import {
   CreateQuizReqBody,
   DeleteQuizzesReqBody,
   GetQuizzesReqQuery,
+  QuizIdReqParams,
   UpdateQuizReqBody
 } from '~/models/requests/Quiz.requests';
 import { TokenPayload } from '~/models/requests/User.requests';
@@ -34,6 +35,18 @@ export const getQuizzesController = async (
     data: {
       quizzes,
       pagination
+    }
+  });
+};
+
+// Lấy thông tin một quiz
+export const getQuizController = async (req: Request<QuizIdReqParams>, res: Response) => {
+  const { quiz_id } = req.params;
+  const { quiz } = await quizzesService.getQuiz(quiz_id);
+  return res.json({
+    messsage: QUIZZES_MESSAGES.GET_QUIZ_SUCCESSFULLY,
+    data: {
+      quiz
     }
   });
 };
