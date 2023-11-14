@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import {
   createQuizController,
+  deleteQuizController,
   deleteQuizzesController,
   getQuizController,
   getQuizzesController,
@@ -54,6 +55,15 @@ quizzesRouter.delete(
   adminRoleValidator,
   deleteQuizzesValidate,
   wrapRequestHandler(deleteQuizzesController)
+);
+
+// Xóa quiz theo id
+quizzesRouter.delete(
+  '/:quiz_id',
+  accessTokenValidator,
+  quizIdValidate,
+  authorQuizValidate,
+  wrapRequestHandler(deleteQuizController)
 );
 
 export default quizzesRouter;

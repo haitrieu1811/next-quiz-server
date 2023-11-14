@@ -393,6 +393,14 @@ class QuizzesService {
       deletedCount
     };
   }
+
+  // Xóa quiz theo id
+  async deleteQuiz(quiz_id: string) {
+    await databaseService.quizzes.deleteOne({
+      _id: new ObjectId(quiz_id)
+    });
+    return true;
+  }
 }
 
 const quizzesService = new QuizzesService();

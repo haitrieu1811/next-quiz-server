@@ -75,3 +75,12 @@ export const deleteQuizzesController = async (
     messsage: `Đã xoá ${deletedCount} quiz`
   });
 };
+
+// Xóa quiz theo id
+export const deleteQuizController = async (req: Request<QuizIdReqParams>, res: Response) => {
+  const { quiz_id } = req.params;
+  await quizzesService.deleteQuiz(quiz_id);
+  return res.json({
+    messsage: QUIZZES_MESSAGES.DELETE_QUIZ_SUCCESSFULLY
+  });
+};

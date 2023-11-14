@@ -82,7 +82,7 @@ export const QUIZZES_MESSAGES = {
   QUIZ_TOPIC_NOT_EXISTED: 'Quiz topic không tồn tại',
   CREATE_QUIZ_SUCCESSFULLY: 'Tạo quiz thành công',
   GET_QUIZZES_SUCCESSFULLY: 'Lấy danh sách quiz thành công',
-  UPDATE_QUIZ_SUCCESSFULLY: 'Cập nhật quiz thành công',
+  UPDATE_QUIZ_SUCCESSFULLY: 'Cập nhật bài trắc nghiệm thành công',
   QUIZ_ID_IS_REQUIRED: 'Quiz id là bắt buộc',
   QUIZ_ID_IS_INVALID: 'Quiz id không hợp lệ',
   QUIZ_IS_NOT_EXISTED: 'Quiz không tồn tại',
@@ -97,7 +97,8 @@ export const QUIZZES_MESSAGES = {
   QUIZ_NAME_LENGTH_IS_INVALID: 'Tên quiz phải có độ dài từ 6 đến 255 ký tự',
   QUIZ_DESCRIPTION_LENGTH_IS_INVALID: 'Mô tả quiz phải có độ dài từ 20 đến 1000 ký tự',
   QUIZ_THUBMNAIL_IS_INVALID: 'Ảnh đại diện của quiz không hợp lệ',
-  GET_QUIZ_SUCCESSFULLY: 'Lấy thông tin quiz thành công'
+  GET_QUIZ_SUCCESSFULLY: 'Lấy thông tin quiz thành công',
+  DELETE_QUIZ_SUCCESSFULLY: 'Xoá quiz thành công'
 } as const;
 
 export const QUESTIONS_MESSAGES = {
