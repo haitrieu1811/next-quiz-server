@@ -1,9 +1,12 @@
+import { NextFunction, Request, Response } from 'express';
 import { ParamSchema, checkSchema } from 'express-validator';
 import { ObjectId } from 'mongodb';
 
 import HTTP_STATUS from '~/constants/httpStatus';
 import { QUESTIONS_MESSAGES, QUIZZES_MESSAGES } from '~/constants/messages';
 import { ErrorWithStatus } from '~/models/Errors';
+import { QuestionIdReqParams } from '~/models/requests/Question.requests';
+import { TokenPayload } from '~/models/requests/User.requests';
 import { Answer } from '~/models/schemas/Question.schema';
 import databaseService from '~/services/database.services';
 import { validate } from '~/utils/validation';
@@ -16,11 +19,22 @@ const quizIdSchema: ParamSchema = {
     errorMessage: QUIZZES_MESSAGES.QUIZ_ID_IS_INVALID
   },
   custom: {
-    options: async (value: string) => {
+    options: async (value: string, { req }) => {
+      const { user_id } = (req as Request).decoded_authorization as TokenPayload;
       const quiz = await databaseService.quizzes.findOne({ _id: new ObjectId(value) });
       if (!quiz) {
-        throw new Error(QUIZZES_MESSAGES.QUIZ_IS_NOT_EXISTED);
+        throw new ErrorWithStatus({
+          message: QUIZZES_MESSAGES.QUIZ_IS_NOT_EXISTED,
+          status: HTTP_STATUS.NOT_FOUND
+        });
       }
+      if (quiz.user_id.toString() !== user_id) {
+        throw new ErrorWithStatus({
+          message: QUIZZES_MESSAGES.QUIZ_NOT_AUTHOR,
+          status: HTTP_STATUS.FORBIDDEN
+        });
+      }
+      return true;
     }
   }
 };
@@ -50,9 +64,6 @@ const imagesSchema: ParamSchema = {
   },
   custom: {
     options: async (value: string[]) => {
-      if (value.length === 0) {
-        throw new Error(QUESTIONS_MESSAGES.QUESTION_IMAGES_MUST_NOT_BE_EMPTY);
-      }
       const isValid = value.every((item) => ObjectId.isValid(item));
       if (!isValid) {
         throw new Error(QUESTIONS_MESSAGES.QUESTION_IMAGES_IS_INVALID);
@@ -71,7 +82,7 @@ const answersSchema: ParamSchema = {
   },
   custom: {
     options: (value: Answer[]) => {
-      const expectFields = ['name', 'description', 'images', 'is_correct'];
+      const expectFields = ['name', 'description', 'is_correct'];
       const isValid = value.every((answer) => {
         const keys = Object.keys(answer);
         for (const key of keys) {
@@ -82,12 +93,7 @@ const answersSchema: ParamSchema = {
         if (keys.length !== expectFields.length) {
           return false;
         }
-        return (
-          typeof answer.name === 'string' &&
-          typeof answer.description &&
-          typeof answer.is_correct === 'boolean' &&
-          Array.isArray(answer.images)
-        );
+        return typeof answer.name === 'string' && typeof answer.description && typeof answer.is_correct === 'boolean';
       });
       if (!isValid) {
         throw new Error(QUESTIONS_MESSAGES.QUESTION_ANSWERS_IS_INVALID);
@@ -184,3 +190,22 @@ export const deleteQuestionsValidator = validate(
     ['body']
   )
 );
+
+// Kiểm tra tác giả của câu hỏi
+export const questionAuthorValidate = async (req: Request<QuestionIdReqParams>, _: Response, next: NextFunction) => {
+  const { question_id } = req.params;
+  const { user_id } = (req as Request).decoded_authorization as TokenPayload;
+  const question = await databaseService.questions.findOne({
+    _id: new ObjectId(question_id),
+    user_id: new ObjectId(user_id)
+  });
+  if (!question) {
+    return next(
+      new ErrorWithStatus({
+        message: QUESTIONS_MESSAGES.QUESTION_NOT_AUTHOR,
+        status: HTTP_STATUS.FORBIDDEN
+      })
+    );
+  }
+  return next();
+};

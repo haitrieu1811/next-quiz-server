@@ -125,5 +125,6 @@ export const QUESTIONS_MESSAGES = {
   QUESTION_IDS_IS_NOT_EMPTY: 'Question ids không được rỗng',
   QUESTION_IDS_IS_INVALID: 'Question ids không hợp lệ',
   QUESTION_IDS_ARE_NOT_EXISTED: 'Question không tồn tại',
-  GET_QUESTION_SUCCESSFULLY: 'Lấy câu hỏi thành công'
+  GET_QUESTION_SUCCESSFULLY: 'Lấy câu hỏi thành công',
+  QUESTION_NOT_AUTHOR: 'Bạn không phải là tác giả của câu hỏi này'
 } as const;

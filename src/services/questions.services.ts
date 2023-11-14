@@ -1,17 +1,18 @@
 import { ObjectId } from 'mongodb';
 
-import { CreateQuestionReqBody } from '~/models/requests/Question.requests';
+import { CreateQuestionReqBody, UpdateQuestionReqBody } from '~/models/requests/Question.requests';
 import Question from '~/models/schemas/Question.schema';
 import databaseService from './database.services';
 import { PaginationReqQuery } from '~/models/requests/Common.requests';
 
 class QuestionsService {
   // Tạo câu hỏi
-  async createQuestion(body: CreateQuestionReqBody) {
+  async createQuestion({ body, user_id }: { body: CreateQuestionReqBody; user_id: string }) {
     const { insertedId } = await databaseService.questions.insertOne(
       new Question({
         ...body,
-        quiz_id: new ObjectId(body.quiz_id)
+        quiz_id: new ObjectId(body.quiz_id),
+        user_id: new ObjectId(user_id)
       })
     );
     const question = await databaseService.questions.findOne({ _id: insertedId });
@@ -43,7 +44,7 @@ class QuestionsService {
   }
 
   // Cập nhật câu hỏi
-  async updateQuestion({ questionId, body }: { questionId: string; body: CreateQuestionReqBody }) {
+  async updateQuestion({ questionId, body }: { questionId: string; body: UpdateQuestionReqBody }) {
     const question = await databaseService.questions.findOneAndUpdate(
       { _id: new ObjectId(questionId) },
       {

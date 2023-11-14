@@ -4,13 +4,13 @@ export interface Answer {
   _id?: ObjectId;
   name: string;
   description?: string;
-  images?: ObjectId[];
   is_correct: boolean;
 }
 
 interface QuestionConstructor {
   _id?: ObjectId;
   quiz_id: ObjectId;
+  user_id: ObjectId;
   name: string;
   description?: string;
   images?: ObjectId[];
@@ -22,6 +22,7 @@ interface QuestionConstructor {
 export default class Question {
   _id?: ObjectId;
   quiz_id: ObjectId;
+  user_id: ObjectId;
   name: string;
   description: string;
   images: ObjectId[];
@@ -29,10 +30,21 @@ export default class Question {
   created_at: Date;
   updated_at: Date;
 
-  constructor({ _id, quiz_id, name, description, images, answers, created_at, updated_at }: QuestionConstructor) {
+  constructor({
+    _id,
+    quiz_id,
+    user_id,
+    name,
+    description,
+    images,
+    answers,
+    created_at,
+    updated_at
+  }: QuestionConstructor) {
     const date = new Date();
     this._id = _id;
     this.quiz_id = quiz_id;
+    this.user_id = user_id;
     this.name = name;
     this.description = description || '';
     this.images = images || [];

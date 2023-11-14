@@ -1,14 +1,21 @@
-import { ObjectId } from 'mongodb';
 import { ParamsDictionary } from 'express-serve-static-core';
 
 import { Answer } from '../schemas/Question.schema';
 
 // Body: Tạo câu hỏi
 export interface CreateQuestionReqBody {
-  quiz_id: ObjectId;
+  quiz_id: string;
+  user_id: string;
   name: string;
   description?: string;
-  images?: ObjectId[];
+  answers: Answer[];
+}
+
+// Body: Cập nhật câu hỏi
+export interface UpdateQuestionReqBody {
+  quiz_id: string;
+  name: string;
+  description?: string;
   answers: Answer[];
 }
 

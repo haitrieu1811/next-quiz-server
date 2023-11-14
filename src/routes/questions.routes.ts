@@ -11,10 +11,11 @@ import { paginationValidator } from '~/middlewares/common.middlewares';
 import {
   createQuestionValidator,
   deleteQuestionsValidator,
+  questionAuthorValidate,
   questionIdValidate
 } from '~/middlewares/questions.middlewares';
 import { quizIdValidate } from '~/middlewares/quizzes.middlewares';
-import { accessTokenValidator, adminRoleValidator } from '~/middlewares/users.middlewares';
+import { accessTokenValidator } from '~/middlewares/users.middlewares';
 import { CreateQuestionReqBody } from '~/models/requests/Question.requests';
 import { filterReqBodyMiddleware, wrapRequestHandler } from '~/utils/handler';
 
@@ -24,9 +25,8 @@ const questionsRouter = Router();
 questionsRouter.post(
   '/',
   accessTokenValidator,
-  adminRoleValidator,
   createQuestionValidator,
-  filterReqBodyMiddleware<CreateQuestionReqBody>(['quiz_id', 'name', 'description', 'images', 'answers']),
+  filterReqBodyMiddleware<CreateQuestionReqBody>(['quiz_id', 'name', 'description', 'answers']),
   wrapRequestHandler(createQuestionController)
 );
 
@@ -43,10 +43,10 @@ questionsRouter.get(
 questionsRouter.put(
   '/:question_id',
   accessTokenValidator,
-  adminRoleValidator,
   questionIdValidate,
+  questionAuthorValidate,
   createQuestionValidator,
-  filterReqBodyMiddleware<CreateQuestionReqBody>(['quiz_id', 'name', 'description', 'images', 'answers']),
+  filterReqBodyMiddleware<CreateQuestionReqBody>(['quiz_id', 'name', 'description', 'answers']),
   wrapRequestHandler(updateQuestionController)
 );
 
@@ -54,7 +54,6 @@ questionsRouter.put(
 questionsRouter.delete(
   '/',
   accessTokenValidator,
-  adminRoleValidator,
   deleteQuestionsValidator,
   wrapRequestHandler(deleteQuestionsController)
 );

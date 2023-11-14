@@ -9,6 +9,7 @@ import {
   QuestionIdReqParams
 } from '~/models/requests/Question.requests';
 import { QuizIdReqParams } from '~/models/requests/Quiz.requests';
+import { TokenPayload } from '~/models/requests/User.requests';
 import questionsService from '~/services/questions.services';
 
 // Tạo câu hỏi
@@ -16,7 +17,8 @@ export const createQuestionController = async (
   req: Request<ParamsDictionary, any, CreateQuestionReqBody>,
   res: Response
 ) => {
-  const { question } = await questionsService.createQuestion(req.body);
+  const { user_id } = req.decoded_authorization as TokenPayload;
+  const { question } = await questionsService.createQuestion({ body: req.body, user_id });
   return res.json({
     message: QUESTIONS_MESSAGES.CREATE_QUESTION_SUCCESSFULLY,
     data: {
