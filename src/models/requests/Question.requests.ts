@@ -8,6 +8,7 @@ export interface CreateQuestionReqBody {
   user_id: string;
   name: string;
   description?: string;
+  images?: string[];
   answers: Answer[];
 }
 
@@ -16,6 +17,7 @@ export interface UpdateQuestionReqBody {
   quiz_id: string;
   name: string;
   description?: string;
+  images?: string[];
   answers: Answer[];
 }
 

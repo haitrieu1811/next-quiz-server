@@ -26,7 +26,7 @@ questionsRouter.post(
   '/',
   accessTokenValidator,
   createQuestionValidator,
-  filterReqBodyMiddleware<CreateQuestionReqBody>(['quiz_id', 'name', 'description', 'answers']),
+  filterReqBodyMiddleware<CreateQuestionReqBody>(['quiz_id', 'name', 'description', 'answers', 'images']),
   wrapRequestHandler(createQuestionController)
 );
 
@@ -46,7 +46,7 @@ questionsRouter.put(
   questionIdValidate,
   questionAuthorValidate,
   createQuestionValidator,
-  filterReqBodyMiddleware<CreateQuestionReqBody>(['quiz_id', 'name', 'description', 'answers']),
+  filterReqBodyMiddleware<CreateQuestionReqBody>(['quiz_id', 'name', 'description', 'answers', 'images']),
   wrapRequestHandler(updateQuestionController)
 );
 

@@ -12,7 +12,8 @@ class QuestionsService {
       new Question({
         ...body,
         quiz_id: new ObjectId(body.quiz_id),
-        user_id: new ObjectId(user_id)
+        user_id: new ObjectId(user_id),
+        images: body.images?.map((image) => new ObjectId(image))
       })
     );
     const question = await databaseService.questions.findOne({ _id: insertedId });
@@ -50,7 +51,8 @@ class QuestionsService {
       {
         $set: {
           ...body,
-          quiz_id: new ObjectId(body.quiz_id)
+          quiz_id: new ObjectId(body.quiz_id),
+          images: body.images?.map((image) => new ObjectId(image))
         },
         $currentDate: {
           updated_at: true
