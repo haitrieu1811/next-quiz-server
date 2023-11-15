@@ -4,6 +4,7 @@ import { CreateQuestionReqBody, UpdateQuestionReqBody } from '~/models/requests/
 import Question from '~/models/schemas/Question.schema';
 import databaseService from './database.services';
 import { PaginationReqQuery } from '~/models/requests/Common.requests';
+import { ENV_CONFIG } from '~/constants/config';
 
 class QuestionsService {
   // Tạo câu hỏi
@@ -81,9 +82,64 @@ class QuestionsService {
 
   // Lấy thông tin câu hỏi
   async getQuestion(questionId: string) {
-    const question = await databaseService.questions.findOne({ _id: new ObjectId(questionId) });
+    const questions = await databaseService.questions
+      .aggregate([
+        {
+          $match: {
+            _id: new ObjectId(questionId)
+          }
+        },
+        {
+          $lookup: {
+            from: 'images',
+            localField: 'images',
+            foreignField: '_id',
+            as: 'images'
+          }
+        },
+        {
+          $addFields: {
+            images: {
+              $map: {
+                input: '$images',
+                as: 'image',
+                in: {
+                  $concat: [ENV_CONFIG.AWS_S3_BUCKET_IMAGES_URL, '/', '$$image.name']
+                }
+              }
+            }
+          }
+        },
+        {
+          $group: {
+            _id: '$_id',
+            quiz_id: {
+              $first: '$quiz_id'
+            },
+            name: {
+              $first: '$name'
+            },
+            description: {
+              $first: '$description'
+            },
+            images: {
+              $first: '$images'
+            },
+            answers: {
+              $first: '$answers'
+            },
+            created_at: {
+              $first: '$created_at'
+            },
+            updated_at: {
+              $first: '$updated_at'
+            }
+          }
+        }
+      ])
+      .toArray();
     return {
-      question
+      question: questions[0]
     };
   }
 }
