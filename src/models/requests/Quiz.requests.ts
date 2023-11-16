@@ -1,6 +1,6 @@
 import { ParamsDictionary } from 'express-serve-static-core';
 
-import { QuizLevel } from '~/constants/enum';
+import { QuizLevel, QuizStatus } from '~/constants/enum';
 import { PaginationReqQuery } from './Common.requests';
 
 // Body: Tạo một quiz mới
@@ -37,4 +37,9 @@ export interface QuizIdReqParams extends ParamsDictionary {
 // Body: Xoá quiz (một hoặc nhiều)
 export interface DeleteQuizzesReqBody {
   quiz_ids: string[];
+}
+
+// Body: Cập nhật trạng thái quiz
+export interface UpdateQuizStatusReqBody {
+  status: QuizStatus;
 }

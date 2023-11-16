@@ -5,6 +5,7 @@ import { QUESTIONS_MESSAGES } from '~/constants/messages';
 import { PaginationReqQuery } from '~/models/requests/Common.requests';
 import {
   CreateQuestionReqBody,
+  DeleteImageOfQuestionReqParams,
   DeleteQuestionsReqBody,
   QuestionIdReqParams
 } from '~/models/requests/Question.requests';
@@ -82,6 +83,21 @@ export const getQuestionController = async (req: Request<QuestionIdReqParams>, r
   const { question } = await questionsService.getQuestion(question_id);
   return res.json({
     message: QUESTIONS_MESSAGES.GET_QUESTION_SUCCESSFULLY,
+    data: {
+      question
+    }
+  });
+};
+
+// Xóa hình ảnh của câu hỏi
+export const deleteQuestionImageController = async (req: Request<DeleteImageOfQuestionReqParams>, res: Response) => {
+  const { question_id, image_id } = req.params;
+  const { question } = await questionsService.deleteImageOfQuestion({
+    questionId: question_id,
+    imageId: image_id
+  });
+  return res.json({
+    message: QUESTIONS_MESSAGES.DELETE_QUESTION_IMAGE_SUCCESSFULLY,
     data: {
       question
     }

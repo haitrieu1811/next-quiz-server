@@ -12,15 +12,6 @@ export interface CreateQuestionReqBody {
   answers: Answer[];
 }
 
-// Body: Cập nhật câu hỏi
-export interface UpdateQuestionReqBody {
-  quiz_id: string;
-  name: string;
-  description?: string;
-  images?: string[];
-  answers: Answer[];
-}
-
 // Params: Question id
 export interface QuestionIdReqParams extends ParamsDictionary {
   question_id: string;
@@ -29,4 +20,9 @@ export interface QuestionIdReqParams extends ParamsDictionary {
 // Body: Xóa câu hỏi (một hoặc nhiều)
 export interface DeleteQuestionsReqBody {
   question_ids: string[];
+}
+
+// Params: Xóa hình ảnh của câu hỏi
+export interface DeleteImageOfQuestionReqParams extends QuestionIdReqParams {
+  image_id: string;
 }

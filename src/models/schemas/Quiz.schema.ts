@@ -1,14 +1,15 @@
 import { ObjectId } from 'mongodb';
-import { QuizLevel } from '~/constants/enum';
+import { QuizLevel, QuizStatus } from '~/constants/enum';
 
 interface QuizConstructor {
   _id?: ObjectId;
   user_id: ObjectId;
   name: string;
   thumbnail?: ObjectId;
+  description?: string;
   level: QuizLevel;
   topic_id: ObjectId;
-  description?: string;
+  status?: QuizStatus;
   created_at?: Date;
   updated_at?: Date;
 }
@@ -18,9 +19,10 @@ export default class Quiz {
   user_id: ObjectId;
   name: string;
   thumbnail: ObjectId | null;
+  description: string;
   level: QuizLevel;
   topic_id: ObjectId;
-  description: string;
+  status: QuizStatus;
   created_at: Date;
   updated_at: Date;
 
@@ -29,9 +31,10 @@ export default class Quiz {
     user_id,
     name,
     thumbnail,
+    description,
     level,
     topic_id,
-    description,
+    status,
     created_at,
     updated_at
   }: QuizConstructor) {
@@ -40,9 +43,10 @@ export default class Quiz {
     this.user_id = user_id;
     this.name = name;
     this.thumbnail = thumbnail || null;
+    this.description = description || '';
     this.level = level;
     this.topic_id = topic_id || null;
-    this.description = description || '';
+    this.status = status || QuizStatus.Published;
     this.created_at = created_at || date;
     this.updated_at = updated_at || date;
   }

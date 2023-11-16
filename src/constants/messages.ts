@@ -54,7 +54,11 @@ export const USERS_MESSAGES = {
 export const IMAGES_MESSAGES = {
   FILE_TYPE_INVALID: 'Loại file không hợp lệ',
   IMAGE_FIELD_IS_REQUIRED: 'Trường ảnh là bắt buộc',
-  UPLOAD_IMAGE_SUCCESSFULLY: 'Tải ảnh lên thành công'
+  UPLOAD_IMAGE_SUCCESSFULLY: 'Tải ảnh lên thành công',
+  DELETE_IMAGE_SUCCESSFULLY: 'Xoá ảnh thành công',
+  IMAGE_IS_NOT_EXISTED: 'Ảnh không tồn tại',
+  IMAGE_ID_IS_REQUIRED: 'Image id là bắt buộc',
+  IMAGE_ID_IS_INVALID: 'Image id không hợp lệ'
 } as const;
 
 export const TOPICS_MESSAGES = {
@@ -98,7 +102,10 @@ export const QUIZZES_MESSAGES = {
   QUIZ_DESCRIPTION_LENGTH_IS_INVALID: 'Mô tả quiz phải có độ dài từ 20 đến 1000 ký tự',
   QUIZ_THUBMNAIL_IS_INVALID: 'Ảnh đại diện của quiz không hợp lệ',
   GET_QUIZ_SUCCESSFULLY: 'Lấy thông tin quiz thành công',
-  DELETE_QUIZ_SUCCESSFULLY: 'Xoá quiz thành công'
+  DELETE_QUIZ_SUCCESSFULLY: 'Xoá quiz thành công',
+  UPDATE_QUIZ_STATUS_SUCCESSFULLY: 'Cập nhật trạng thái quiz thành công',
+  QUIZ_STATUS_IS_REQUIRED: 'Trạng thái quiz là bắt buộc',
+  QUIZ_STATUS_IS_INVALID: 'Trạng thái quiz không hợp lệ'
 } as const;
 
 export const QUESTIONS_MESSAGES = {
@@ -126,5 +133,6 @@ export const QUESTIONS_MESSAGES = {
   QUESTION_IDS_IS_INVALID: 'Question ids không hợp lệ',
   QUESTION_IDS_ARE_NOT_EXISTED: 'Question không tồn tại',
   GET_QUESTION_SUCCESSFULLY: 'Lấy câu hỏi thành công',
-  QUESTION_NOT_AUTHOR: 'Bạn không phải là tác giả của câu hỏi này'
+  QUESTION_NOT_AUTHOR: 'Bạn không phải là tác giả của câu hỏi này',
+  DELETE_QUESTION_IMAGE_SUCCESSFULLY: 'Xoá ảnh của câu hỏi thành công'
 } as const;

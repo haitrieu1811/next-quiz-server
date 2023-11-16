@@ -7,7 +7,8 @@ import {
   DeleteQuizzesReqBody,
   GetQuizzesReqQuery,
   QuizIdReqParams,
-  UpdateQuizReqBody
+  UpdateQuizReqBody,
+  UpdateQuizStatusReqBody
 } from '~/models/requests/Quiz.requests';
 import { TokenPayload } from '~/models/requests/User.requests';
 import quizzesService from '~/services/quizzes.services';
@@ -82,5 +83,20 @@ export const deleteQuizController = async (req: Request<QuizIdReqParams>, res: R
   await quizzesService.deleteQuiz(quiz_id);
   return res.json({
     messsage: QUIZZES_MESSAGES.DELETE_QUIZ_SUCCESSFULLY
+  });
+};
+
+// Cập nhật trạng thái của quiz
+export const updateQuizStatusController = async (
+  req: Request<QuizIdReqParams, any, UpdateQuizStatusReqBody>,
+  res: Response
+) => {
+  const { quiz_id } = req.params;
+  const { quiz } = await quizzesService.updateQuizStatus({ quiz_id, status: req.body.status });
+  return res.json({
+    messsage: QUIZZES_MESSAGES.UPDATE_QUIZ_STATUS_SUCCESSFULLY,
+    data: {
+      quiz
+    }
   });
 };

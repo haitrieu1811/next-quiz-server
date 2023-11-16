@@ -2,10 +2,11 @@ import isUndefined from 'lodash/isUndefined';
 import omitBy from 'lodash/omitBy';
 import { ObjectId } from 'mongodb';
 
+import { ENV_CONFIG } from '~/constants/config';
 import { CreateQuizReqBody, GetQuizzesReqQuery, UpdateQuizReqBody } from '~/models/requests/Quiz.requests';
 import Quiz from '~/models/schemas/Quiz.schema';
 import databaseService from './database.services';
-import { ENV_CONFIG } from '~/constants/config';
+import { QuizStatus } from '~/constants/enum';
 
 class QuizzesService {
   // Tạo một quiz mới
@@ -400,6 +401,29 @@ class QuizzesService {
       _id: new ObjectId(quiz_id)
     });
     return true;
+  }
+
+  // Cập nhật trạng thái của quiz
+  async updateQuizStatus({ quiz_id, status }: { quiz_id: string; status: QuizStatus }) {
+    const quiz = await databaseService.quizzes.findOneAndUpdate(
+      {
+        _id: new ObjectId(quiz_id)
+      },
+      {
+        $set: {
+          status
+        },
+        $currentDate: {
+          updated_at: true
+        }
+      },
+      {
+        returnDocument: 'after'
+      }
+    );
+    return {
+      quiz
+    };
   }
 }
 

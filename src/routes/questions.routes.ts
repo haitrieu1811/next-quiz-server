@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import {
   createQuestionController,
+  deleteQuestionImageController,
   deleteQuestionsController,
   getQuestionController,
   getQuestionsByQuizIdController,
@@ -64,6 +65,15 @@ questionsRouter.get(
   accessTokenValidator,
   questionIdValidate,
   wrapRequestHandler(getQuestionController)
+);
+
+// Xóa hình ảnh của câu hỏi
+questionsRouter.delete(
+  '/:question_id/images/:image_id',
+  accessTokenValidator,
+  questionIdValidate,
+  questionAuthorValidate,
+  wrapRequestHandler(deleteQuestionImageController)
 );
 
 export default questionsRouter;

@@ -28,3 +28,13 @@ export enum QuizLevel {
   Hard,
   VeryHard
 }
+
+export enum QuizStatus {
+  Published,
+  Unpublished
+}
+
+export enum QuestionStatus {
+  Published,
+  Unpublished
+}

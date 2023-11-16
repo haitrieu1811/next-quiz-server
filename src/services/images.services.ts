@@ -1,12 +1,13 @@
 import { Request } from 'express';
 import fsPromise from 'fs/promises';
+import { ObjectId, WithId } from 'mongodb';
 import path from 'path';
 import sharp from 'sharp';
-import { UPLOAD_IMAGE_DIR } from '~/constants/dir';
 
+import { UPLOAD_IMAGE_DIR } from '~/constants/dir';
 import Image from '~/models/schemas/Image.schema';
 import { getExtensionFromFullname, getNameFromFullname, handleUploadImage } from '~/utils/file';
-import { uploadFileToS3 } from '~/utils/s3';
+import { deleteFileFromS3, uploadFileToS3 } from '~/utils/s3';
 import databaseService from './database.services';
 
 class ImagesService {
@@ -42,6 +43,14 @@ class ImagesService {
       })
     );
     return result;
+  }
+
+  // Xóa ảnh
+  async deleteImage(id: string) {
+    // Xóa ảnh trong database và trong S3 bucket
+    const image = await databaseService.images.findOneAndDelete({ _id: new ObjectId(id) });
+    await deleteFileFromS3(`images/${(image as WithId<Image>).name}`);
+    return true;
   }
 }
 

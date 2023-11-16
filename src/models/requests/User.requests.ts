@@ -1,6 +1,4 @@
 import { JwtPayload } from 'jsonwebtoken';
-import { ObjectId } from 'mongodb';
-
 import { TokenType, UserGender, UserRole } from '~/constants/enum';
 
 export interface TokenPayload extends JwtPayload {
@@ -41,7 +39,7 @@ export interface UpdateMeReqBody {
   bio?: string;
   gender?: UserGender;
   phone_number?: string;
-  date_of_birth?: Date;
+  date_of_birth?: string;
 }
 
 // Body: Đổi mật khẩu

@@ -376,10 +376,13 @@ class UsersService {
 
   // Cập nhật thông tin người dùng hiện tại
   async updateMe({ body, user_id }: { body: UpdateMeReqBody; user_id: string }) {
+    const { avatar, cover, date_of_birth } = body;
     const updateConfig = omitBy(
       {
-        avatar: body.avatar ? new ObjectId(body.avatar) : undefined,
-        cover: body.cover ? new ObjectId(body.cover) : undefined
+        ...body,
+        avatar: avatar ? new ObjectId(avatar) : undefined,
+        cover: cover ? new ObjectId(cover) : undefined,
+        date_of_birth: date_of_birth ? new Date(date_of_birth) : undefined
       },
       isUndefined
     );
@@ -388,10 +391,7 @@ class UsersService {
         _id: new ObjectId(user_id)
       },
       {
-        $set: {
-          ...omit(body, ['avatar', 'cover']),
-          ...updateConfig
-        },
+        $set: updateConfig,
         $currentDate: {
           updated_at: true
         }

@@ -2,7 +2,7 @@ import { ParamSchema, checkSchema } from 'express-validator';
 import { ObjectId, WithId } from 'mongodb';
 import { NextFunction, Request, Response } from 'express';
 
-import { QuizLevel } from '~/constants/enum';
+import { QuizLevel, QuizStatus } from '~/constants/enum';
 import { QUIZZES_MESSAGES } from '~/constants/messages';
 import databaseService from '~/services/database.services';
 import { numberEnumToArray } from '~/utils/common';
@@ -14,6 +14,7 @@ import { ErrorWithStatus } from '~/models/Errors';
 import HTTP_STATUS from '~/constants/httpStatus';
 
 const quizLevels = numberEnumToArray(QuizLevel);
+const quizStatuses = numberEnumToArray(QuizStatus);
 
 // Tên quiz
 const nameSchema: ParamSchema = {
@@ -239,6 +240,24 @@ export const deleteQuizzesValidate = validate(
             }
             return true;
           }
+        }
+      }
+    },
+    ['body']
+  )
+);
+
+// Cập nhật trạng thái của quiz
+export const updateQuizStatusValidate = validate(
+  checkSchema(
+    {
+      status: {
+        notEmpty: {
+          errorMessage: QUIZZES_MESSAGES.QUIZ_STATUS_IS_REQUIRED
+        },
+        isIn: {
+          options: [quizStatuses],
+          errorMessage: QUIZZES_MESSAGES.QUIZ_STATUS_IS_INVALID
         }
       }
     },

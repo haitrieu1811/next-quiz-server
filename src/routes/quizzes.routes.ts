@@ -6,7 +6,8 @@ import {
   deleteQuizzesController,
   getQuizController,
   getQuizzesController,
-  updateQuizController
+  updateQuizController,
+  updateQuizStatusController
 } from '~/controllers/quizzes.controllers';
 import {
   authorQuizValidate,
@@ -14,6 +15,7 @@ import {
   deleteQuizzesValidate,
   getQuizzesValidate,
   quizIdValidate,
+  updateQuizStatusValidate,
   updateQuizValidate
 } from '~/middlewares/quizzes.middlewares';
 import { accessTokenValidator, adminRoleValidator } from '~/middlewares/users.middlewares';
@@ -64,6 +66,16 @@ quizzesRouter.delete(
   quizIdValidate,
   authorQuizValidate,
   wrapRequestHandler(deleteQuizController)
+);
+
+// Cập nhật trạng thái quiz
+quizzesRouter.patch(
+  '/:quiz_id/status',
+  accessTokenValidator,
+  quizIdValidate,
+  authorQuizValidate,
+  updateQuizStatusValidate,
+  wrapRequestHandler(updateQuizStatusController)
 );
 
 export default quizzesRouter;
