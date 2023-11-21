@@ -105,7 +105,9 @@ export const QUIZZES_MESSAGES = {
   DELETE_QUIZ_SUCCESSFULLY: 'Xoá quiz thành công',
   UPDATE_QUIZ_STATUS_SUCCESSFULLY: 'Cập nhật trạng thái quiz thành công',
   QUIZ_STATUS_IS_REQUIRED: 'Trạng thái quiz là bắt buộc',
-  QUIZ_STATUS_IS_INVALID: 'Trạng thái quiz không hợp lệ'
+  QUIZ_STATUS_IS_INVALID: 'Trạng thái quiz không hợp lệ',
+  QUIZ_USER_ID_IS_INVALID: 'Quiz user id không hợp lệ',
+  QUIZ_AUDIENCE_IS_INVALID: 'Quiz audience không hợp lệ'
 } as const;
 
 export const QUESTIONS_MESSAGES = {

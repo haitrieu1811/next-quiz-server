@@ -9,12 +9,18 @@ import databaseService from './database.services';
 class QuestionsService {
   // Tạo câu hỏi
   async createQuestion({ body, user_id }: { body: CreateQuestionReqBody; user_id: string }) {
+    const { answers } = body;
+    const _answers = answers.map((answer) => ({
+      _id: new ObjectId(),
+      ...answer
+    }));
     const { insertedId } = await databaseService.questions.insertOne(
       new Question({
         ...body,
         quiz_id: new ObjectId(body.quiz_id),
         user_id: new ObjectId(user_id),
-        images: body.images?.map((image) => new ObjectId(image))
+        images: body.images?.map((image) => new ObjectId(image)),
+        answers: _answers
       })
     );
     const question = await databaseService.questions.findOne({ _id: insertedId });

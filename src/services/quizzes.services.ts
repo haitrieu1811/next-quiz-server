@@ -6,7 +6,7 @@ import { ENV_CONFIG } from '~/constants/config';
 import { CreateQuizReqBody, GetQuizzesReqQuery, UpdateQuizReqBody } from '~/models/requests/Quiz.requests';
 import Quiz from '~/models/schemas/Quiz.schema';
 import databaseService from './database.services';
-import { QuizStatus } from '~/constants/enum';
+import { QuizAudience } from '~/constants/enum';
 
 class QuizzesService {
   // Tạo một quiz mới
@@ -200,6 +200,174 @@ class QuizzesService {
       limit: _limit,
       total_rows: total,
       total_pages: Math.ceil(total / _limit)
+    };
+  }
+
+  // Lấy danh sách các
+  async getPublicQuizzes(query: GetQuizzesReqQuery) {
+    const { page, limit } = query;
+    const _page = Number(page) || 1;
+    const _limit = Number(limit) || 20;
+    const [quizzes, count] = await Promise.all([
+      databaseService.quizzes
+        .aggregate([
+          {
+            $match: {
+              audience: QuizAudience.Everyone
+            }
+          },
+          {
+            $lookup: {
+              from: 'users',
+              localField: 'user_id',
+              foreignField: '_id',
+              as: 'author'
+            }
+          },
+          {
+            $unwind: {
+              path: '$author'
+            }
+          },
+          {
+            $lookup: {
+              from: 'images',
+              localField: 'thumbnail',
+              foreignField: '_id',
+              as: 'thumbnail'
+            }
+          },
+          {
+            $unwind: {
+              path: '$thumbnail',
+              preserveNullAndEmptyArrays: true
+            }
+          },
+          {
+            $lookup: {
+              from: 'topics',
+              localField: 'topic_id',
+              foreignField: '_id',
+              as: 'topic'
+            }
+          },
+          {
+            $unwind: {
+              path: '$topic'
+            }
+          },
+          {
+            $lookup: {
+              from: 'images',
+              localField: 'author.avatar',
+              foreignField: '_id',
+              as: 'author_avatar'
+            }
+          },
+          {
+            $unwind: {
+              path: '$author_avatar',
+              preserveNullAndEmptyArrays: true
+            }
+          },
+          {
+            $lookup: {
+              from: 'images',
+              localField: 'author.cover',
+              foreignField: '_id',
+              as: 'author_cover'
+            }
+          },
+          {
+            $unwind: {
+              path: '$author_cover',
+              preserveNullAndEmptyArrays: true
+            }
+          },
+          {
+            $addFields: {
+              thumbnail_url: {
+                $cond: {
+                  if: '$thumbnail',
+                  then: {
+                    $concat: [ENV_CONFIG.AWS_S3_BUCKET_IMAGES_URL, '/', '$thumbnail.name']
+                  },
+                  else: ''
+                }
+              },
+              'author.avatar': {
+                $cond: {
+                  if: '$author_avatar',
+                  then: {
+                    $concat: [ENV_CONFIG.AWS_S3_BUCKET_IMAGES_URL, '/', '$author_avatar.name']
+                  },
+                  else: ''
+                }
+              },
+              'author.cover': {
+                $cond: {
+                  if: '$author_cover',
+                  then: {
+                    $concat: [ENV_CONFIG.AWS_S3_BUCKET_IMAGES_URL, '/', '$author_cover.name']
+                  },
+                  else: ''
+                }
+              }
+            }
+          },
+          {
+            $group: {
+              _id: '$_id',
+              name: {
+                $first: '$name'
+              },
+              description: {
+                $first: '$description'
+              },
+              thumbnail: {
+                $first: '$thumbnail_url'
+              },
+              level: {
+                $first: '$level'
+              },
+              author: {
+                $first: '$author'
+              },
+              topic: {
+                $first: '$topic'
+              },
+              created_at: {
+                $first: '$created_at'
+              },
+              updated_at: {
+                $first: '$updated_at'
+              }
+            }
+          },
+          {
+            $project: {
+              'author.password': 0,
+              'author.forgot_password_token': 0
+            }
+          },
+          {
+            $skip: (_page - 1) * _limit
+          },
+          {
+            $limit: _limit
+          }
+        ])
+        .toArray(),
+      databaseService.quizzes.countDocuments({
+        audience: QuizAudience.Everyone
+      })
+    ]);
+    return {
+      quizzes,
+      page: _page,
+      limit: _limit,
+      total_rows: count,
+      total_pages: Math.ceil(count / _limit)
     };
   }
 
@@ -401,29 +569,6 @@ class QuizzesService {
       _id: new ObjectId(quiz_id)
     });
     return true;
-  }
-
-  // Cập nhật trạng thái của quiz
-  async updateQuizStatus({ quiz_id, status }: { quiz_id: string; status: QuizStatus }) {
-    const quiz = await databaseService.quizzes.findOneAndUpdate(
-      {
-        _id: new ObjectId(quiz_id)
-      },
-      {
-        $set: {
-          status
-        },
-        $currentDate: {
-          updated_at: true
-        }
-      },
-      {
-        returnDocument: 'after'
-      }
-    );
-    return {
-      quiz
-    };
   }
 }
 

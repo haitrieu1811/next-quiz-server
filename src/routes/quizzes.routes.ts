@@ -4,10 +4,10 @@ import {
   createQuizController,
   deleteQuizController,
   deleteQuizzesController,
+  getPublicQuizzesController,
   getQuizController,
   getQuizzesController,
-  updateQuizController,
-  updateQuizStatusController
+  updateQuizController
 } from '~/controllers/quizzes.controllers';
 import {
   authorQuizValidate,
@@ -15,7 +15,6 @@ import {
   deleteQuizzesValidate,
   getQuizzesValidate,
   quizIdValidate,
-  updateQuizStatusValidate,
   updateQuizValidate
 } from '~/middlewares/quizzes.middlewares';
 import { accessTokenValidator, adminRoleValidator } from '~/middlewares/users.middlewares';
@@ -29,12 +28,21 @@ quizzesRouter.post(
   '/',
   accessTokenValidator,
   createQuizValidate,
-  filterReqBodyMiddleware<CreateQuizReqBody>(['name', 'description', 'level', 'topic_id', 'thumbnail']),
+  filterReqBodyMiddleware<CreateQuizReqBody>(['name', 'description', 'level', 'topic_id', 'thumbnail', 'audience']),
   wrapRequestHandler(createQuizController)
 );
 
 // Lấy danh sách các quiz
-quizzesRouter.get('/', getQuizzesValidate, wrapRequestHandler(getQuizzesController));
+quizzesRouter.get(
+  '/',
+  accessTokenValidator,
+  adminRoleValidator,
+  getQuizzesValidate,
+  wrapRequestHandler(getQuizzesController)
+);
+
+// Lấy danh sách bài trắc nghiệm public
+quizzesRouter.get('/public', getQuizzesValidate, wrapRequestHandler(getPublicQuizzesController));
 
 // Lấy thông tin một quiz
 quizzesRouter.get('/:quiz_id', quizIdValidate, wrapRequestHandler(getQuizController));
@@ -46,7 +54,7 @@ quizzesRouter.patch(
   quizIdValidate,
   authorQuizValidate,
   updateQuizValidate,
-  filterReqBodyMiddleware<CreateQuizReqBody>(['name', 'description', 'level', 'topic_id', 'thumbnail']),
+  filterReqBodyMiddleware<CreateQuizReqBody>(['name', 'description', 'level', 'topic_id', 'thumbnail', 'audience']),
   wrapRequestHandler(updateQuizController)
 );
 
@@ -66,16 +74,6 @@ quizzesRouter.delete(
   quizIdValidate,
   authorQuizValidate,
   wrapRequestHandler(deleteQuizController)
-);
-
-// Cập nhật trạng thái quiz
-quizzesRouter.patch(
-  '/:quiz_id/status',
-  accessTokenValidator,
-  quizIdValidate,
-  authorQuizValidate,
-  updateQuizStatusValidate,
-  wrapRequestHandler(updateQuizStatusController)
 );
 
 export default quizzesRouter;

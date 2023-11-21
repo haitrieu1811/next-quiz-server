@@ -7,8 +7,7 @@ import {
   DeleteQuizzesReqBody,
   GetQuizzesReqQuery,
   QuizIdReqParams,
-  UpdateQuizReqBody,
-  UpdateQuizStatusReqBody
+  UpdateQuizReqBody
 } from '~/models/requests/Quiz.requests';
 import { TokenPayload } from '~/models/requests/User.requests';
 import quizzesService from '~/services/quizzes.services';
@@ -86,17 +85,17 @@ export const deleteQuizController = async (req: Request<QuizIdReqParams>, res: R
   });
 };
 
-// Cập nhật trạng thái của quiz
-export const updateQuizStatusController = async (
-  req: Request<QuizIdReqParams, any, UpdateQuizStatusReqBody>,
+// Lấy danh sách các bài trắc nghiệm public
+export const getPublicQuizzesController = async (
+  req: Request<ParamsDictionary, any, any, GetQuizzesReqQuery>,
   res: Response
 ) => {
-  const { quiz_id } = req.params;
-  const { quiz } = await quizzesService.updateQuizStatus({ quiz_id, status: req.body.status });
+  const { quizzes, ...pagination } = await quizzesService.getPublicQuizzes(req.query);
   return res.json({
-    messsage: QUIZZES_MESSAGES.UPDATE_QUIZ_STATUS_SUCCESSFULLY,
+    messsage: QUIZZES_MESSAGES.GET_QUIZZES_SUCCESSFULLY,
     data: {
-      quiz
+      quizzes,
+      pagination
     }
   });
 };

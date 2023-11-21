@@ -1,20 +1,20 @@
+import { NextFunction, Request, Response } from 'express';
 import { ParamSchema, checkSchema } from 'express-validator';
 import { ObjectId, WithId } from 'mongodb';
-import { NextFunction, Request, Response } from 'express';
 
-import { QuizLevel, QuizStatus } from '~/constants/enum';
+import { QuizAudience, QuizLevel } from '~/constants/enum';
+import HTTP_STATUS from '~/constants/httpStatus';
 import { QUIZZES_MESSAGES } from '~/constants/messages';
-import databaseService from '~/services/database.services';
-import { numberEnumToArray } from '~/utils/common';
-import { validate } from '~/utils/validation';
+import { ErrorWithStatus } from '~/models/Errors';
 import { QuizIdReqParams } from '~/models/requests/Quiz.requests';
 import { TokenPayload } from '~/models/requests/User.requests';
 import Quiz from '~/models/schemas/Quiz.schema';
-import { ErrorWithStatus } from '~/models/Errors';
-import HTTP_STATUS from '~/constants/httpStatus';
+import databaseService from '~/services/database.services';
+import { numberEnumToArray } from '~/utils/common';
+import { validate } from '~/utils/validation';
 
 const quizLevels = numberEnumToArray(QuizLevel);
-const quizStatuses = numberEnumToArray(QuizStatus);
+const quizAudiences = numberEnumToArray(QuizAudience);
 
 // Tên quiz
 const nameSchema: ParamSchema = {
@@ -130,6 +130,20 @@ export const getQuizzesValidate = validate(
             return true;
           }
         }
+      },
+      user_id: {
+        optional: true,
+        isMongoId: {
+          errorMessage: QUIZZES_MESSAGES.QUIZ_USER_ID_IS_INVALID
+        },
+        trim: true
+      },
+      audience: {
+        optional: true,
+        isIn: {
+          options: [quizAudiences],
+          errorMessage: QUIZZES_MESSAGES.QUIZ_AUDIENCE_IS_INVALID
+        }
       }
     },
     ['query']
@@ -240,24 +254,6 @@ export const deleteQuizzesValidate = validate(
             }
             return true;
           }
-        }
-      }
-    },
-    ['body']
-  )
-);
-
-// Cập nhật trạng thái của quiz
-export const updateQuizStatusValidate = validate(
-  checkSchema(
-    {
-      status: {
-        notEmpty: {
-          errorMessage: QUIZZES_MESSAGES.QUIZ_STATUS_IS_REQUIRED
-        },
-        isIn: {
-          options: [quizStatuses],
-          errorMessage: QUIZZES_MESSAGES.QUIZ_STATUS_IS_INVALID
         }
       }
     },

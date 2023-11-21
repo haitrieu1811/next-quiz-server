@@ -29,12 +29,12 @@ export enum QuizLevel {
   VeryHard
 }
 
-export enum QuizStatus {
-  Published,
-  Unpublished
+export enum QuizAudience {
+  Everyone,
+  OnlyMe
 }
 
-export enum QuestionStatus {
-  Published,
-  Unpublished
+export enum QuestionAudience {
+  Everyone,
+  OnlyMe
 }
