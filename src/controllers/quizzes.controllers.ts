@@ -99,3 +99,19 @@ export const getPublicQuizzesController = async (
     }
   });
 };
+
+// Lấy danh sách các bài trắc nghiệm của một user
+export const getQuizzesByUserIdController = async (
+  req: Request<ParamsDictionary, any, any, GetQuizzesReqQuery>,
+  res: Response
+) => {
+  const { user_id } = req.decoded_authorization as TokenPayload;
+  const { quizzes, ...pagination } = await quizzesService.getQuizzesByUserId({ user_id, query: req.query });
+  return res.json({
+    messsage: QUIZZES_MESSAGES.GET_QUIZZES_SUCCESSFULLY,
+    data: {
+      quizzes,
+      pagination
+    }
+  });
+};

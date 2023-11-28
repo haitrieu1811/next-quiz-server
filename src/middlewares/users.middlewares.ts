@@ -217,10 +217,10 @@ export const loginValidator = validate(
               email,
               password: hashPassword(value)
             });
-            const userInfo = await usersService.getUserById((user as WithId<User>)._id.toString());
             if (!user) {
               throw new Error(USERS_MESSAGES.EMAIL_OR_PASSWORD_IS_INCORRECT);
             }
+            const userInfo = await usersService.getUserById(user._id.toString());
             (req as Request).user = userInfo;
             return true;
           }

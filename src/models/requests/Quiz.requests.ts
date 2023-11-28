@@ -18,7 +18,6 @@ export interface GetQuizzesReqQuery extends PaginationReqQuery {
   name?: string;
   level?: QuizLevel;
   topic?: string;
-  user_id?: string;
   audience?: QuizAudience;
 }
 

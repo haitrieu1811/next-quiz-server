@@ -131,13 +131,6 @@ export const getQuizzesValidate = validate(
           }
         }
       },
-      user_id: {
-        optional: true,
-        isMongoId: {
-          errorMessage: QUIZZES_MESSAGES.QUIZ_USER_ID_IS_INVALID
-        },
-        trim: true
-      },
       audience: {
         optional: true,
         isIn: {

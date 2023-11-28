@@ -6,6 +6,7 @@ import {
   deleteQuizzesController,
   getPublicQuizzesController,
   getQuizController,
+  getQuizzesByUserIdController,
   getQuizzesController,
   updateQuizController
 } from '~/controllers/quizzes.controllers';
@@ -43,6 +44,14 @@ quizzesRouter.get(
 
 // Lấy danh sách bài trắc nghiệm public
 quizzesRouter.get('/public', getQuizzesValidate, wrapRequestHandler(getPublicQuizzesController));
+
+// Lấy danh sách các bài trắc nghiệm của một user
+quizzesRouter.get(
+  '/logged-user',
+  accessTokenValidator,
+  getQuizzesValidate,
+  wrapRequestHandler(getQuizzesByUserIdController)
+);
 
 // Lấy thông tin một quiz
 quizzesRouter.get('/:quiz_id', quizIdValidate, wrapRequestHandler(getQuizController));
